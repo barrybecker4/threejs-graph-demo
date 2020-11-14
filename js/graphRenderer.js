@@ -1,13 +1,12 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
-import { GUI } from './libs/dat.gui.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.122.0/examples/jsm/controls/OrbitControls.js';
+import uiControls from './uiControls.js';
 
 export default {
     init,
     animate,
 }
-
 
 let group;
 let container, stats;
@@ -20,7 +19,6 @@ let particlePositions;
 let linesMesh;
 
 const maxParticleCount = 1000;
-let particleCount = 500;
 const r = 800;
 const rHalf = r / 2;
 
@@ -33,34 +31,13 @@ const effectController = {
     particleCount: 500
 };
 
-function initGUI() {
-
-    const gui = new GUI();
-
-    gui.add( effectController, "showDots" ).onChange( function ( value ) {
-
-        pointCloud.visible = value;
-
-    } );
-    gui.add( effectController, "showLines" ).onChange( function ( value ) {
-
-        linesMesh.visible = value;
-
-    } );
-    gui.add( effectController, "minDistance", 10, 300 );
-    gui.add( effectController, "limitConnections" );
-    gui.add( effectController, "maxConnections", 0, 30, 1 );
-    gui.add( effectController, "particleCount", 0, maxParticleCount, 1 ).onChange( function ( value ) {
-
-        particleCount = parseInt( value );
-        particles.setDrawRange( 0, particleCount );
-
-    } );
-}
 
 function init() {
 
-    initGUI();
+    const onParticleCountChange = function ( value ) {
+        particles.setDrawRange(0, effectController.particleCount );
+    };
+    uiControls.initGUI(effectController, maxParticleCount, onParticleCountChange);
 
     container = document.getElementById( 'container' );
 
@@ -72,7 +49,6 @@ function init() {
     controls.maxDistance = 3000;
 
     scene = new THREE.Scene();
-
 
     group = new THREE.Group();
     scene.add( group );
@@ -117,7 +93,7 @@ function init() {
 
     }
 
-    particles.setDrawRange( 0, particleCount );
+    particles.setDrawRange( 0, effectController.particleCount );
     particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 
     // create the particle system
@@ -173,10 +149,10 @@ function animate() {
     let colorpos = 0;
     let numConnected = 0;
 
-    for ( let i = 0; i < particleCount; i ++ )
+    for ( let i = 0; i < effectController.particleCount; i ++ )
         particlesData[ i ].numConnections = 0;
 
-    for ( let i = 0; i < particleCount; i ++ ) {
+    for ( let i = 0; i < effectController.particleCount; i ++ ) {
 
         // get the particle
         const particleData = particlesData[ i ];
@@ -198,7 +174,7 @@ function animate() {
             continue;
 
         // Check collision
-        for ( let j = i + 1; j < particleCount; j ++ ) {
+        for ( let j = i + 1; j < effectController.particleCount; j ++ ) {
 
             const particleDataB = particlesData[ j ];
             if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
