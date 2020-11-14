@@ -1,5 +1,4 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
-import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
 import uiControls from './uiControls.js';
 import navContext from './navContext.js';
 
@@ -9,13 +8,13 @@ export default {
 }
 
 let group;
-let container, stats;
 const particlesData = [];
 let positions, colors;
 let particles;
 let pointCloud;
 let particlePositions;
 let linesMesh;
+let context;
 
 const maxParticleCount = 1000;
 const r = 800;
@@ -29,11 +28,10 @@ function init() {
     };
     uiControls.initGUI(maxParticleCount, onParticleCountChange);
 
-    const container = document.getElementById('container');
-    navContext.init(container);
+    context = navContext('container');
 
     group = new THREE.Group();
-    navContext.add( group );
+    context.add( group );
 
     const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxBufferGeometry( r, r, r ) ) );
     helper.material.color.setHex( 0x101010 );
@@ -99,13 +97,6 @@ function init() {
 
     linesMesh = new THREE.LineSegments( geometry, material );
     group.add( linesMesh );
-
-    container.appendChild( navContext.getRootElement() );
-
-    stats = new Stats();
-    container.appendChild( stats.dom );
-
-    window.addEventListener( 'resize', navContext.onWindowResize, false );
 }
 
 
@@ -180,7 +171,6 @@ function animate() {
         }
     }
 
-
     linesMesh.geometry.setDrawRange( 0, numConnected * 2 );
     linesMesh.geometry.attributes.position.needsUpdate = true;
     linesMesh.geometry.attributes.color.needsUpdate = true;
@@ -189,14 +179,11 @@ function animate() {
 
     requestAnimationFrame( animate );
 
-    stats.update();
     render();
 }
 
 function render() {
-
     const time = Date.now() * 0.001;
-
     group.rotation.y = time * 0.1;
-    navContext.render();
+    context.render();
 }
