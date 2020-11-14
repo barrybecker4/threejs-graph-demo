@@ -1,0 +1,12 @@
+# IntelliJ
+*.iml
+/.idea
+/out
+
+# Build and log dirs
+**/bin
+**/target
+**/build
+**/dist
+**/logs
+**/out
