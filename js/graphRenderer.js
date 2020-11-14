@@ -1,7 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.122.0/examples/jsm/controls/OrbitControls.js';
 import uiControls from './uiControls.js';
+import navContext from './navContext.js';
 
 export default {
     init,
@@ -11,7 +11,6 @@ export default {
 let group;
 let container, stats;
 const particlesData = [];
-let camera, scene, renderer;
 let positions, colors;
 let particles;
 let pointCloud;
@@ -22,36 +21,19 @@ const maxParticleCount = 1000;
 const r = 800;
 const rHalf = r / 2;
 
-const effectController = {
-    showDots: true,
-    showLines: true,
-    minDistance: 150,
-    limitConnections: false,
-    maxConnections: 20,
-    particleCount: 500
-};
-
 
 function init() {
 
     const onParticleCountChange = function ( value ) {
-        particles.setDrawRange(0, effectController.particleCount );
+        particles.setDrawRange(0, uiControls.getParticleCount() );
     };
-    uiControls.initGUI(effectController, maxParticleCount, onParticleCountChange);
+    uiControls.initGUI(maxParticleCount, onParticleCountChange);
 
-    container = document.getElementById( 'container' );
-
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 4000 );
-    camera.position.z = 1750;
-
-    const controls = new OrbitControls( camera, container );
-    controls.minDistance = 1000;
-    controls.maxDistance = 3000;
-
-    scene = new THREE.Scene();
+    const container = document.getElementById('container');
+    navContext.init(container);
 
     group = new THREE.Group();
-    scene.add( group );
+    navContext.add( group );
 
     const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxBufferGeometry( r, r, r ) ) );
     helper.material.color.setHex( 0x101010 );
@@ -93,7 +75,7 @@ function init() {
 
     }
 
-    particles.setDrawRange( 0, effectController.particleCount );
+    particles.setDrawRange( 0, uiControls.getParticleCount() );
     particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 
     // create the particle system
@@ -118,30 +100,14 @@ function init() {
     linesMesh = new THREE.LineSegments( geometry, material );
     group.add( linesMesh );
 
-    //
-
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.outputEncoding = THREE.sRGBEncoding;
-
-    container.appendChild( renderer.domElement );
-
-    //
+    container.appendChild( navContext.getRootElement() );
 
     stats = new Stats();
     container.appendChild( stats.dom );
 
-    window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'resize', navContext.onWindowResize, false );
 }
 
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-}
 
 function animate() {
 
@@ -149,13 +115,14 @@ function animate() {
     let colorpos = 0;
     let numConnected = 0;
 
-    for ( let i = 0; i < effectController.particleCount; i ++ )
+    for ( let i = 0; i < uiControls.getParticleCount(); i ++ )
         particlesData[ i ].numConnections = 0;
 
-    for ( let i = 0; i < effectController.particleCount; i ++ ) {
+    for ( let i = 0; i < uiControls.getParticleCount(); i ++ ) {
 
         // get the particle
         const particleData = particlesData[ i ];
+        const effectController = uiControls.effectController;
 
         particlePositions[ i * 3 ] += particleData.velocity.x;
         particlePositions[ i * 3 + 1 ] += particleData.velocity.y;
@@ -174,7 +141,7 @@ function animate() {
             continue;
 
         // Check collision
-        for ( let j = i + 1; j < effectController.particleCount; j ++ ) {
+        for ( let j = i + 1; j < uiControls.getParticleCount(); j ++ ) {
 
             const particleDataB = particlesData[ j ];
             if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
@@ -231,5 +198,5 @@ function render() {
     const time = Date.now() * 0.001;
 
     group.rotation.y = time * 0.1;
-    renderer.render( scene, camera );
+    navContext.render();
 }
