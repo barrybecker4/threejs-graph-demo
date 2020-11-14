@@ -4,17 +4,9 @@ import navContext from './navContext.js';
 import sceneGraph from './sceneGraph.js';
 
 
-export default {
-    init,
-    animate,
-}
-
-const maxParticleCount = 1000;
-let group;
-let context;
-
-
-function init() {
+export default function(maxParticleCount) {
+    let group;
+    let context;
 
     const onParticleCountChange = value => group.setNumParticlesToShow(uiControls.getParticleCount());
 
@@ -23,22 +15,21 @@ function init() {
 
     context = navContext('container');
 
-
     context.add( group );
-}
+    animate();
 
-
-function animate() {
-    group.animate();
-    requestAnimationFrame(animate);
-    render();
-}
-
-function render() {
-    const rotateSpeed = uiControls.effectController.autoRotateSpeed;
-    if (rotateSpeed > 0) {
-        group.rotation.y += rotateSpeed / 100.0;
+    function animate() {
+        group.animate();
+        requestAnimationFrame(animate);
+        render();
     }
 
-    context.render();
+    function render() {
+        const rotateSpeed = uiControls.effectController.autoRotateSpeed;
+        if (rotateSpeed > 0) {
+            group.rotation.y += rotateSpeed / 100.0;
+        }
+
+        context.render();
+    }
 }
