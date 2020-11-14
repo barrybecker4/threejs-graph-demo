@@ -1,6 +1,6 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
-import { GUI } from './dat.gui.module.js';
+import { GUI } from './libs/dat.gui.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.122.0/examples/jsm/controls/OrbitControls.js';
 
 export default {
