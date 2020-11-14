@@ -7,7 +7,7 @@ const effectController = {
     limitConnections: false,
     maxConnections: 20,
     particleCount: 500,
-    autoRotateSpeed: 0,
+    autoRotateSpeed: 0.2,
 };
 
 export default {
