@@ -1,6 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import uiControls from './uiControls.js';
 import navContext from './navContext.js';
+import materials from './materials.js';
 
 export default {
     init,
@@ -44,13 +45,7 @@ function init() {
     positions = new Float32Array( segments * 3 );
     colors = new Float32Array( segments * 3 );
 
-    const pMaterial = new THREE.PointsMaterial( {
-        color: 0xFFFFFF,
-        size: 3,
-        blending: THREE.AdditiveBlending,
-        transparent: true,
-        sizeAttenuation: false
-    } );
+
 
     particles = new THREE.BufferGeometry();
     particlePositions = new Float32Array( maxParticleCount * 3 );
@@ -77,7 +72,7 @@ function init() {
     particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 
     // create the particle system
-    pointCloud = new THREE.Points( particles, pMaterial );
+    pointCloud = new THREE.Points( particles, materials.POINT_MATERIAL );
     group.add( pointCloud );
 
     const geometry = new THREE.BufferGeometry();
@@ -89,13 +84,7 @@ function init() {
 
     geometry.setDrawRange( 0, 0 );
 
-    const material = new THREE.LineBasicMaterial( {
-        vertexColors: true,
-        blending: THREE.AdditiveBlending,
-        transparent: true
-    } );
-
-    linesMesh = new THREE.LineSegments( geometry, material );
+    linesMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
     group.add( linesMesh );
 }
 
