@@ -24,10 +24,11 @@ const rHalf = r / 2;
 
 function init() {
 
-    const onParticleCountChange = function ( value ) {
-        particles.setDrawRange(0, uiControls.getParticleCount() );
-    };
-    uiControls.initGUI(maxParticleCount, onParticleCountChange);
+    const onParticleCountChange = value => particles.setDrawRange(0, uiControls.getParticleCount());
+    const onShowDotsChange = value => pointCloud.visible = value;
+    const onShowLinesChange = value => linesMesh.visible = value;
+
+    uiControls.initGUI(maxParticleCount, onParticleCountChange, onShowDotsChange, onShowLinesChange);
 
     context = navContext('container');
 
@@ -44,8 +45,6 @@ function init() {
 
     positions = new Float32Array( segments * 3 );
     colors = new Float32Array( segments * 3 );
-
-
 
     particles = new THREE.BufferGeometry();
     particlePositions = new Float32Array( maxParticleCount * 3 );
@@ -172,7 +171,10 @@ function animate() {
 }
 
 function render() {
-    const time = Date.now() * 0.001;
-    group.rotation.y = time * 0.1;
+    const rotateSpeed = uiControls.effectController.autoRotateSpeed;
+    if (rotateSpeed > 0) {
+        group.rotation.y += rotateSpeed / 100.0;
+    }
+
     context.render();
 }
