@@ -1,4 +1,4 @@
-import { GUI } from './libs/dat.gui.module.js';
+import { GUI } from '../libs/dat.gui.module.js';
 import FogGUIHelper from './FogUIHelper.js';
 
 export default function(maxParticleCount, fogHelper, sceneParams,

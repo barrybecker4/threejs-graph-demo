@@ -24,6 +24,7 @@ export default function(containerId) {
     const controls = createOrbitControls(camera, container);
     container.appendChild(renderer.domElement);
 
+    // Show performance stats (like FPS). See https://github.com/mrdoob/stats.js/
     let stats = new Stats();
     container.appendChild( stats.dom );
 

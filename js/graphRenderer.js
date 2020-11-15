@@ -1,9 +1,9 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
-import uiControls from './uiControls.js';
 import navContext from './navContext.js';
 import sceneGraph from './sceneGraph.js';
-import FogGUIHelper from './FogUIHelper.js';
-import SceneParameters from './SceneParameters.js';
+import uiControls from './ui/uiControls.js';
+import FogGUIHelper from './ui/FogUIHelper.js';
+import SceneParameters from './ui/SceneParameters.js';
 
 
 export default function(maxParticleCount) {
