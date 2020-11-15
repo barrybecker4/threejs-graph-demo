@@ -8,6 +8,15 @@ const POINT_MATERIAL = new THREE.PointsMaterial({
     sizeAttenuation: true, // points in distance are smaller
 });
 
+const SOLID_MATERIAL = new THREE.MeshPhongMaterial({
+    side: THREE.DoubleSide,
+    color: 0x44bb99,
+    specular: 0xffffff,
+    shininess: 250,
+    vertexColors: true
+});
+
+
 const LINE_MATERIAL = new THREE.LineBasicMaterial( {
     color: 0xAB3BBB,
     linewidth: 3,
@@ -19,4 +28,5 @@ const LINE_MATERIAL = new THREE.LineBasicMaterial( {
 export default {
     POINT_MATERIAL,
     LINE_MATERIAL,
+    SOLID_MATERIAL,
 }

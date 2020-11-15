@@ -9,22 +9,20 @@ export default class LinesData {
         this.colors = new Float32Array( maxLines * 3 );
     }
 
-    updatePositions(vertexpos, pti, ptj) {
+    updatePositionsAndColors(idx, pti, ptj, alpha) {
         const positions = this.positions;
-        positions[ vertexpos++ ] = pti.x;
-        positions[ vertexpos++ ] = pti.y;
-        positions[ vertexpos++ ] = pti.z;
+        positions[ idx ] = pti.x;
+        positions[ idx + 1 ] = pti.y;
+        positions[ idx + 2 ] = pti.z;
 
-        positions[ vertexpos++ ] = ptj.x;
-        positions[ vertexpos++ ] = ptj.y;
-        positions[ vertexpos++ ] = ptj.z;
-        return vertexpos;
-    }
+        positions[ idx + 3 ] = ptj.x;
+        positions[ idx + 4 ] = ptj.y;
+        positions[ idx + 5 ] = ptj.z;
 
-    updateColors(colorpos, alpha) {
         for (let i = 0; i < 6; i++) {
-            this.colors[ colorpos + i ] = alpha;
+            this.colors[ idx + i ] = alpha;
         }
-        return colorpos + 6;
+
+        return idx + 6;
     }
 }

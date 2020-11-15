@@ -9,27 +9,17 @@ const R = 800;
 export default function(maxParticleCount, sceneParams) {
 
     const particlesData = new ParticlesData(maxParticleCount, R);
+    const particles = createParticles(particlesData);
     const linesData = new LinesData(maxParticleCount);
 
     const group = new THREE.Group();
     group.add( createBoxHelper(R) );
 
-    const particles = new THREE.BufferGeometry();
-    particles.setDrawRange( 0, sceneParams.particleCount );
-    particles.setAttribute('position',
-        new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage) );
+    const pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL); // materials.SOLID_MATERIAL); //
+    group.add(pointCloud);
 
-    // create the particle system
-    const pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL);
-    group.add( pointCloud );
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute( 'position', new THREE.BufferAttribute( linesData.positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    geometry.setAttribute( 'color', new THREE.BufferAttribute( linesData.colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    geometry.computeBoundingSphere();
-    geometry.setDrawRange( 0, 0 );
-
-    const lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
+    const lineGeometry = createLineGeometry(linesData);
+    const lineMesh = new THREE.LineSegments( lineGeometry, materials.LINE_MATERIAL );
     group.add( lineMesh );
 
     group.showLineMesh = (value) => lineMesh.visible = value;
@@ -37,52 +27,7 @@ export default function(maxParticleCount, sceneParams) {
     group.setNumParticlesToShow = (value) => particles.setDrawRange(0, value);
 
     group.animate = function() {
-        let vertexpos = 0;
-        let colorpos = 0;
-        let numConnected = 0;
-
-        for ( let i = 0; i < sceneParams.particleCount; i ++ ) {
-            particlesData.get(i).numConnections = 0;
-        }
-
-        const speedFactor = sceneParams.particleSpeed / 10;
-
-        for ( let i = 0; i < sceneParams.particleCount; i ++ ) {
-
-            // get the particle
-            const particleData = particlesData.get(i);
-            particlesData.updatePositionAndVelocity(i, speedFactor);
-
-            if (sceneParams.limitConnections && particleData.numConnections >= sceneParams.maxConnections)
-                continue;
-
-            // Check collision
-            const positions = linesData.positions;
-            const colors = linesData.colors;
-            for ( let j = i + 1; j < sceneParams.particleCount; j ++ ) {
-
-                const particleDataB = particlesData.get(j);
-                if ( sceneParams.limitConnections && particleDataB.numConnections >= sceneParams.maxConnections )
-                    continue;
-
-                const pti = particlesData.getPoint(i);
-                const ptj = particlesData.getPoint(j);
-                const dist = particlesData.distanceBetween(i, j);
-
-                if ( dist < sceneParams.minDistance ) {
-
-                    particleData.numConnections++;
-                    particleDataB.numConnections++;
-
-                    const alpha = 1.0 - dist / sceneParams.minDistance;
-
-                    vertexpos = linesData.updatePositions(vertexpos, pti, ptj);
-                    colorpos = linesData.updateColors(colorpos, alpha);
-
-                    numConnected++;
-                }
-            }
-        }
+        const numConnected = particlesData.connectPoints(linesData, sceneParams);
 
         lineMesh.geometry.setDrawRange( 0, numConnected * 2 );
         lineMesh.geometry.attributes.position.needsUpdate = true;
@@ -98,6 +43,24 @@ export default function(maxParticleCount, sceneParams) {
     }
 
     return group;
+}
+
+function createParticles(particlesData) {
+    //const particles = new THREE.SphereBufferGeometry(20, 10, 10);
+    const particles = new THREE.BufferGeometry();
+    particles.setDrawRange( 0, particlesData.data.length); // sceneParams.particleCount );
+    particles.setAttribute('position',
+        new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage) );
+    return particles;
+}
+
+function createLineGeometry(linesData) {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute( linesData.positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+    geometry.setAttribute('color', new THREE.BufferAttribute( linesData.colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+    geometry.computeBoundingSphere();
+    geometry.setDrawRange( 0, 0 );
+    return geometry;
 }
 
 function createBoxHelper(r) {
