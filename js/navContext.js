@@ -19,7 +19,7 @@ export default function(containerId) {
 
     const container = document.getElementById(containerId);
     const camera = createCamera()
-    const scene = new THREE.Scene();
+    const scene = createScene();
     const renderer = createRenderer();
     const controls = createOrbitControls(camera, container);
     container.appendChild(renderer.domElement);
@@ -53,6 +53,19 @@ function createCamera() {
     const camera = new THREE.PerspectiveCamera(FOV, ASPECT_RATIO, NEAR_CLIP, FAR_CLIP);
     camera.position.z = 1750;
     return camera;
+}
+
+function createScene() {
+    const scene = new THREE.Scene();
+    {
+      const near = 500;
+      const far = 3000;
+      const color = '#112233'; // 'lightblue';
+      //const density = 0.0004;
+      scene.fog = new THREE.Fog(color, near, far);
+      scene.background = new THREE.Color(color);
+    }
+    return scene;
 }
 
 function createOrbitControls(camera, container) {

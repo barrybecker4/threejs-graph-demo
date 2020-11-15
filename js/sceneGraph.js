@@ -27,6 +27,7 @@ export default function(maxParticleCount, controls) {
     positions = new Float32Array( segments * 3 );
     colors = new Float32Array( segments * 3 );
 
+
     particles = new THREE.BufferGeometry();
     particlePositions = new Float32Array( maxParticleCount * 3 );
 
@@ -49,20 +50,21 @@ export default function(maxParticleCount, controls) {
     }
 
     particles.setDrawRange( 0, controls.getParticleCount() );
-    particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+    particles.setAttribute( 'position',
+        new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+
 
     // create the particle system
     pointCloud = new THREE.Points( particles, materials.POINT_MATERIAL );
     group.add( pointCloud );
 
     const geometry = new THREE.BufferGeometry();
-
     geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
     geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-
     geometry.computeBoundingSphere();
-
     geometry.setDrawRange( 0, 0 );
+
+
 
     lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
     group.add( lineMesh );
@@ -99,7 +101,7 @@ export default function(maxParticleCount, controls) {
             if ( particlePositions[ i * 3 + 2 ] < - rHalf || particlePositions[ i * 3 + 2 ] > rHalf )
                 particleData.velocity.z = - particleData.velocity.z;
 
-            if ( effectController.limitConnections && particleData.numConnections >= effectController.maxConnections )
+            if (effectController.limitConnections && particleData.numConnections >= effectController.maxConnections)
                 continue;
 
             // Check collision
