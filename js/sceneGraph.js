@@ -2,20 +2,15 @@ import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import materials from './materials.js';
 import ParticlesData from './ParticlesData.js';
 
+// edge length of the bounding cube
+const R = 800;
 
 export default function(maxParticleCount, sceneParams) {
 
+    const particlesData = new ParticlesData(maxParticleCount, R);
+
     const group = new THREE.Group();
-
-    const r = 800;
-
-    const particlesData = new ParticlesData(maxParticleCount, r);
-
-    const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxBufferGeometry( r, r, r ) ) );
-    helper.material.color.setHex( 0x101010 );
-    helper.material.blending = THREE.AdditiveBlending;
-    helper.material.transparent = true;
-    group.add( helper );
+    group.add( createBoxHelper(R) );
 
     const maxSegments = maxParticleCount * maxParticleCount;
 
@@ -36,7 +31,6 @@ export default function(maxParticleCount, sceneParams) {
     geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
     geometry.computeBoundingSphere();
     geometry.setDrawRange( 0, 0 );
-
 
     const lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
     group.add( lineMesh );
@@ -69,18 +63,14 @@ export default function(maxParticleCount, sceneParams) {
 
             // Check collision
             for ( let j = i + 1; j < sceneParams.particleCount; j ++ ) {
-                const jj = 3 * j;
 
                 const particleDataB = particlesData.get(j);
                 if ( sceneParams.limitConnections && particleDataB.numConnections >= sceneParams.maxConnections )
                     continue;
 
-                const pti = particlesData.getPoint(ii);
-                const ptj = particlesData.getPoint(jj);
-                const dx = pti.x - ptj.x;
-                const dy = pti.y - ptj.y;
-                const dz = pti.z - ptj.z;
-                const dist = Math.sqrt( dx * dx + dy * dy + dz * dz );
+                const pti = particlesData.getPoint(i);
+                const ptj = particlesData.getPoint(j);
+                const dist = particlesData.distanceBetween(i, j);
 
                 if ( dist < sceneParams.minDistance ) {
 
@@ -124,4 +114,12 @@ export default function(maxParticleCount, sceneParams) {
     }
 
     return group;
+}
+
+function createBoxHelper(r) {
+    const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxBufferGeometry( r, r, r ) ) );
+    helper.material.color.setHex( 0x101010 );
+    helper.material.blending = THREE.AdditiveBlending;
+    helper.material.transparent = true;
+    return helper;
 }

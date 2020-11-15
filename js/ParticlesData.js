@@ -1,7 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 
 
-export default class ParticleData {
+export default class ParticlesData {
 
     constructor(maxParticleCount, r) {
         const data = [];
@@ -38,7 +38,14 @@ export default class ParticleData {
 
     getPoint(i) {
         const positions = this.positions;
-        return { x: positions[i], y: positions[i + 1], z: positions[i + 2]};
+        const ii = 3 * i;
+        return { x: positions[ii], y: positions[ii + 1], z: positions[ii + 2]};
+    }
+
+    distanceBetween(i, j) {
+        const pti = this.getPoint(i);
+        const ptj = this.getPoint(j);
+        return ParticlesData.distance(pti, ptj);
     }
 
     updatePositionAndVelocity(i, speedFactor) {
@@ -61,4 +68,10 @@ export default class ParticleData {
             velocity.z = -velocity.z;
     }
 
+    static distance(pti, ptj) {
+        const dx = pti.x - ptj.x;
+        const dy = pti.y - ptj.y;
+        const dz = pti.z - ptj.z;
+        return Math.sqrt( dx * dx + dy * dy + dz * dz );
+    }
 }
