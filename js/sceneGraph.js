@@ -12,7 +12,7 @@ let lineMesh;
 const r = 800;
 const rHalf = r / 2;
 
-export default function(maxParticleCount, uiControls) {
+export default function(maxParticleCount, controls) {
 
     group = new THREE.Group();
 
@@ -45,10 +45,9 @@ export default function(maxParticleCount, uiControls) {
             velocity: new THREE.Vector3( - 1 + Math.random() * 2, - 1 + Math.random() * 2, - 1 + Math.random() * 2 ),
             numConnections: 0
         } );
-
     }
 
-    particles.setDrawRange( 0, uiControls.getParticleCount() );
+    particles.setDrawRange( 0, controls.getParticleCount() );
     particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 
     // create the particle system
@@ -76,14 +75,14 @@ export default function(maxParticleCount, uiControls) {
         let colorpos = 0;
         let numConnected = 0;
 
-        for ( let i = 0; i < uiControls.getParticleCount(); i ++ )
+        for ( let i = 0; i < controls.getParticleCount(); i ++ )
             particlesData[ i ].numConnections = 0;
 
-        for ( let i = 0; i < uiControls.getParticleCount(); i ++ ) {
+        for ( let i = 0; i < controls.getParticleCount(); i ++ ) {
 
             // get the particle
             const particleData = particlesData[ i ];
-            const effectController = uiControls.effectController;
+            const effectController = controls.effectController;
 
             particlePositions[ i * 3 ] += particleData.velocity.x;
             particlePositions[ i * 3 + 1 ] += particleData.velocity.y;
@@ -102,7 +101,7 @@ export default function(maxParticleCount, uiControls) {
                 continue;
 
             // Check collision
-            for ( let j = i + 1; j < uiControls.getParticleCount(); j ++ ) {
+            for ( let j = i + 1; j < controls.getParticleCount(); j ++ ) {
 
                 const particleDataB = particlesData[ j ];
                 if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
@@ -146,6 +145,12 @@ export default function(maxParticleCount, uiControls) {
         lineMesh.geometry.attributes.color.needsUpdate = true;
 
         pointCloud.geometry.attributes.position.needsUpdate = true;
+
+        // auto rotate if needed
+        const rotateSpeed = controls.effectController.autoRotateSpeed;
+        if (rotateSpeed > 0) {
+            group.rotation.y += rotateSpeed / 100.0;
+        }
     }
 
     return group;

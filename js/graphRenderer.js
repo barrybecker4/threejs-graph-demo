@@ -5,31 +5,22 @@ import sceneGraph from './sceneGraph.js';
 
 
 export default function(maxParticleCount) {
-    let group;
-    let context;
 
-    const onParticleCountChange = value => group.setNumParticlesToShow(uiControls.getParticleCount());
+    const onParticleCountChange = value => group.setNumParticlesToShow(controls.getParticleCount());
+    const onShowDotsChange = value => group.showPointCloud(value);
+    const onShowLinesChange = value => group.showLineMesh(value);
 
-    group = sceneGraph(maxParticleCount, uiControls);
-    uiControls.initGUI(maxParticleCount, onParticleCountChange, group.showPointCloud, group.showLineMesh);
+    const controls = uiControls(maxParticleCount, onParticleCountChange, onShowDotsChange, onShowLinesChange);
+    const group = sceneGraph(maxParticleCount, controls);
 
-    context = navContext('container');
+    const context = navContext('container');
+    context.add(group);
 
-    context.add( group );
     animate();
 
     function animate() {
         group.animate();
         requestAnimationFrame(animate);
-        render();
-    }
-
-    function render() {
-        const rotateSpeed = uiControls.effectController.autoRotateSpeed;
-        if (rotateSpeed > 0) {
-            group.rotation.y += rotateSpeed / 100.0;
-        }
-
         context.render();
     }
 }
