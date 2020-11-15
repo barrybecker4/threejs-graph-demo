@@ -12,7 +12,7 @@ let lineMesh;
 const r = 800;
 const rHalf = r / 2;
 
-export default function(maxParticleCount, controls) {
+export default function(maxParticleCount, sceneParams) {
 
     group = new THREE.Group();
 
@@ -49,7 +49,7 @@ export default function(maxParticleCount, controls) {
         });
     }
 
-    particles.setDrawRange( 0, controls.getParticleCount() );
+    particles.setDrawRange( 0, sceneParams.particleCount );
     particles.setAttribute( 'position',
         new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 
@@ -65,7 +65,6 @@ export default function(maxParticleCount, controls) {
     geometry.setDrawRange( 0, 0 );
 
 
-
     lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
     group.add( lineMesh );
 
@@ -78,15 +77,14 @@ export default function(maxParticleCount, controls) {
         let colorpos = 0;
         let numConnected = 0;
 
-        for ( let i = 0; i < controls.getParticleCount(); i ++ )
+        for ( let i = 0; i < sceneParams.particleCount; i ++ )
             particlesData[ i ].numConnections = 0;
 
-        for ( let i = 0; i < controls.getParticleCount(); i ++ ) {
+        for ( let i = 0; i < sceneParams.particleCount; i ++ ) {
 
             // get the particle
             const particleData = particlesData[ i ];
-            const effectController = controls.effectController;
-            const speedFactor = effectController.particleSpeed / 10;
+            const speedFactor = sceneParams.particleSpeed / 10;
 
             particlePositions[ i * 3 ] += particleData.velocity.x * speedFactor;
             particlePositions[ i * 3 + 1 ] += particleData.velocity.y * speedFactor;
@@ -101,14 +99,14 @@ export default function(maxParticleCount, controls) {
             if ( particlePositions[ i * 3 + 2 ] < - rHalf || particlePositions[ i * 3 + 2 ] > rHalf )
                 particleData.velocity.z = - particleData.velocity.z;
 
-            if (effectController.limitConnections && particleData.numConnections >= effectController.maxConnections)
+            if (sceneParams.limitConnections && particleData.numConnections >= sceneParams.maxConnections)
                 continue;
 
             // Check collision
-            for ( let j = i + 1; j < controls.getParticleCount(); j ++ ) {
+            for ( let j = i + 1; j < sceneParams.particleCount; j ++ ) {
 
                 const particleDataB = particlesData[ j ];
-                if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
+                if ( sceneParams.limitConnections && particleDataB.numConnections >= sceneParams.maxConnections )
                     continue;
 
                 const dx = particlePositions[ i * 3 ] - particlePositions[ j * 3 ];
@@ -116,12 +114,12 @@ export default function(maxParticleCount, controls) {
                 const dz = particlePositions[ i * 3 + 2 ] - particlePositions[ j * 3 + 2 ];
                 const dist = Math.sqrt( dx * dx + dy * dy + dz * dz );
 
-                if ( dist < effectController.minDistance ) {
+                if ( dist < sceneParams.minDistance ) {
 
                     particleData.numConnections ++;
                     particleDataB.numConnections ++;
 
-                    const alpha = 1.0 - dist / effectController.minDistance;
+                    const alpha = 1.0 - dist / sceneParams.minDistance;
 
                     positions[ vertexpos ++ ] = particlePositions[ i * 3 ];
                     positions[ vertexpos ++ ] = particlePositions[ i * 3 + 1 ];
@@ -151,7 +149,7 @@ export default function(maxParticleCount, controls) {
         pointCloud.geometry.attributes.position.needsUpdate = true;
 
         // auto rotate if needed
-        const rotateSpeed = controls.effectController.autoRotateSpeed;
+        const rotateSpeed = sceneParams.autoRotateSpeed;
         if (rotateSpeed > 0) {
             group.rotation.y += rotateSpeed / 100.0;
         }

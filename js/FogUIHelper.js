@@ -6,7 +6,7 @@ export default class FogGUIHelper {
 
     constructor(scene) {
         this.fog = scene.fog;
-        this.backgroundColor = scene.backgroundColor;
+        this.backgroundColor = scene.background;
     }
 
     get fogNear() {
