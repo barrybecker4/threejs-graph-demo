@@ -1,20 +1,14 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import materials from './materials.js';
 
-let group;
-const particlesData = [];
-let positions, colors;
-let particles;
-let pointCloud;
-let particlePositions;
-let lineMesh;
-
-const r = 800;
-const rHalf = r / 2;
 
 export default function(maxParticleCount, sceneParams) {
 
-    group = new THREE.Group();
+    const group = new THREE.Group();
+
+    const particlesData = [];
+    const r = 800;
+    const rHalf = r / 2;
 
     const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxBufferGeometry( r, r, r ) ) );
     helper.material.color.setHex( 0x101010 );
@@ -24,12 +18,12 @@ export default function(maxParticleCount, sceneParams) {
 
     const segments = maxParticleCount * maxParticleCount;
 
-    positions = new Float32Array( segments * 3 );
-    colors = new Float32Array( segments * 3 );
+    const positions = new Float32Array( segments * 3 );
+    const colors = new Float32Array( segments * 3 );
 
 
-    particles = new THREE.BufferGeometry();
-    particlePositions = new Float32Array( maxParticleCount * 3 );
+    const particles = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array( maxParticleCount * 3 );
 
     for ( let i = 0; i < maxParticleCount; i ++ ) {
 
@@ -55,7 +49,7 @@ export default function(maxParticleCount, sceneParams) {
 
 
     // create the particle system
-    pointCloud = new THREE.Points( particles, materials.POINT_MATERIAL );
+    const pointCloud = new THREE.Points( particles, materials.POINT_MATERIAL );
     group.add( pointCloud );
 
     const geometry = new THREE.BufferGeometry();
@@ -65,7 +59,7 @@ export default function(maxParticleCount, sceneParams) {
     geometry.setDrawRange( 0, 0 );
 
 
-    lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
+    const lineMesh = new THREE.LineSegments( geometry, materials.LINE_MATERIAL );
     group.add( lineMesh );
 
     group.showLineMesh = (value) => lineMesh.visible = value;
