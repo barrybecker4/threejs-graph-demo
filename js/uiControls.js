@@ -12,7 +12,7 @@ const effectController = {
     particleSpeed: 4,
 };
 
-export default function(maxParticleCount, scene,
+export default function(maxParticleCount, fogHelper,
                         onParticleCountChange, onShowDotsChange, onShowLinesChange) {
 
    const gui = new GUI();
@@ -42,13 +42,12 @@ export default function(maxParticleCount, scene,
        const sceneFolder = gui.addFolder("Scene");
        sceneFolder.add(effectController, "autoRotateSpeed", 0, 10, 0.1);
 
-       const fog = scene.fog;
-       const fogGUIHelper = new FogGUIHelper(fog, scene.background);
-       const fogNear = fog.near;
-       const fogFar = fog.far;
-       sceneFolder.add(fogGUIHelper, 'fogNear', fogNear, fogFar).listen();
-       sceneFolder.add(fogGUIHelper, 'fogFar', fogNear, fogFar).listen();
-       sceneFolder.addColor(fogGUIHelper, 'color');
+       //const fog = scene.fog;
+       const fogNear = fogHelper.fogNear;
+       const fogFar = fogHelper.fogFar;
+       sceneFolder.add(fogHelper, 'fogNear', fogNear, fogFar).listen();
+       sceneFolder.add(fogHelper, 'fogFar', fogNear, fogFar).listen();
+       sceneFolder.addColor(fogHelper, 'color');
 
        sceneFolder.open();
    }
