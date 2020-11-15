@@ -11,6 +11,6 @@ export default class SceneParameters {
         this.maxConnections = 20;
         this.particleCount = 500;
         this.autoRotateSpeed = 0.2;
-        this.particleSpeed = 4;
+        this.particleSpeed = 2;
     }
 }

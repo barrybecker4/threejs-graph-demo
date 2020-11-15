@@ -1,6 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import materials from './materials.js';
 import ParticlesData from './ParticlesData.js';
+import LinesData from './LinesData.js';
 
 // edge length of the bounding cube
 const R = 800;
@@ -8,14 +9,10 @@ const R = 800;
 export default function(maxParticleCount, sceneParams) {
 
     const particlesData = new ParticlesData(maxParticleCount, R);
+    const linesData = new LinesData(maxParticleCount);
 
     const group = new THREE.Group();
     group.add( createBoxHelper(R) );
-
-    const maxSegments = maxParticleCount * maxParticleCount;
-
-    const positions = new Float32Array( maxSegments * 3 );
-    const colors = new Float32Array( maxSegments * 3 );
 
     const particles = new THREE.BufferGeometry();
     particles.setDrawRange( 0, sceneParams.particleCount );
@@ -27,8 +24,8 @@ export default function(maxParticleCount, sceneParams) {
     group.add( pointCloud );
 
     const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( linesData.positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+    geometry.setAttribute( 'color', new THREE.BufferAttribute( linesData.colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
     geometry.computeBoundingSphere();
     geometry.setDrawRange( 0, 0 );
 
@@ -54,14 +51,14 @@ export default function(maxParticleCount, sceneParams) {
 
             // get the particle
             const particleData = particlesData.get(i);
-            const ii = 3 * i;
-
             particlesData.updatePositionAndVelocity(i, speedFactor);
 
             if (sceneParams.limitConnections && particleData.numConnections >= sceneParams.maxConnections)
                 continue;
 
             // Check collision
+            const positions = linesData.positions;
+            const colors = linesData.colors;
             for ( let j = i + 1; j < sceneParams.particleCount; j ++ ) {
 
                 const particleDataB = particlesData.get(j);
@@ -79,21 +76,8 @@ export default function(maxParticleCount, sceneParams) {
 
                     const alpha = 1.0 - dist / sceneParams.minDistance;
 
-                    positions[ vertexpos++ ] = pti.x;
-                    positions[ vertexpos++ ] = pti.y;
-                    positions[ vertexpos++ ] = pti.z;
-
-                    positions[ vertexpos++ ] = ptj.x;
-                    positions[ vertexpos++ ] = ptj.y;
-                    positions[ vertexpos++ ] = ptj.z;
-
-                    colors[ colorpos++ ] = alpha;
-                    colors[ colorpos++ ] = alpha;
-                    colors[ colorpos++ ] = alpha;
-
-                    colors[ colorpos++ ] = alpha;
-                    colors[ colorpos++ ] = alpha;
-                    colors[ colorpos++ ] = alpha;
+                    vertexpos = linesData.updatePositions(vertexpos, pti, ptj);
+                    colorpos = linesData.updateColors(colorpos, alpha);
 
                     numConnected++;
                 }

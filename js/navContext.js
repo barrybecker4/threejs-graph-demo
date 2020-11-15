@@ -65,7 +65,7 @@ function createScene() {
     {
       const near = 500;
       const far = 3000;
-      const color = '#112233';
+      const color = '#041421';
       //const density = 0.0004; For FogExp2
       scene.fog = new THREE.Fog(color, near, far);
       scene.background = new THREE.Color(color);
