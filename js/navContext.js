@@ -20,6 +20,7 @@ export default function(containerId) {
     const container = document.getElementById(containerId);
     const camera = createCamera()
     const scene = createScene();
+    scene.add(camera); // needed if camera has light source
     const renderer = createRenderer();
     const controls = createOrbitControls(camera, container);
     container.appendChild(renderer.domElement);
@@ -57,6 +58,15 @@ export default function(containerId) {
 function createCamera() {
     const camera = new THREE.PerspectiveCamera(FOV, ASPECT_RATIO, NEAR_CLIP, FAR_CLIP);
     camera.position.z = 1750;
+
+    {
+        const color = 0xFFFFFF;
+        const intensity = 1;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(1, -2, -4);
+        light.target.position.set(0, 0, 0);
+        camera.add(light);
+     }
     return camera;
 }
 
@@ -70,6 +80,15 @@ function createScene() {
       scene.fog = new THREE.Fog(color, near, far);
       scene.background = new THREE.Color(color);
     }
+    {
+        const color = 0xFFFFFF;
+        const intensity = 0.5;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(-1, 2, 4);
+        light.target.position.set(0, 0, 0);
+        scene.add(light);
+    }
+
     return scene;
 }
 

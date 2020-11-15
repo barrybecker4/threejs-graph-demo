@@ -15,11 +15,36 @@ export default function(maxParticleCount, sceneParams) {
     const group = new THREE.Group();
     group.add( createBoxHelper(R) );
 
-    const pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL); // materials.SOLID_MATERIAL); //
+    const pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL);
+
+    /* This can be used to have the points show with real geometry like cubes or spheres.
+    const pointCloud = new THREE.Group();
+    const geometry = new THREE.BoxBufferGeometry( 4, 5, 6 );
+    //const geometry = new THREE.SphereBufferGeometry( 7, 10, 10 );
+    for ( let i = 0; i < maxParticleCount; i ++ ) {
+
+        const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
+
+        const pt = particlesData.getPoint(i);
+        object.position.x = pt.x;
+        object.position.y = pt.y;
+        object.position.z = pt.z;
+
+        object.rotation.x = Math.random() * 2 * Math.PI;
+        object.rotation.y = Math.random() * 2 * Math.PI;
+        object.rotation.z = Math.random() * 2 * Math.PI;
+
+        //object.scale.x = Math.random() + 0.5;
+        //object.scale.y = Math.random() + 0.5;
+        //object.scale.z = Math.random() + 0.5;
+
+        pointCloud.add( object );
+    }*/
+
     group.add(pointCloud);
 
     const lineGeometry = createLineGeometry(linesData);
-    const lineMesh = new THREE.LineSegments( lineGeometry, materials.LINE_MATERIAL );
+    const lineMesh = new THREE.LineSegments( lineGeometry, materials.LINE_MATERIAL);
     group.add( lineMesh );
 
     group.showLineMesh = (value) => lineMesh.visible = value;
@@ -33,7 +58,7 @@ export default function(maxParticleCount, sceneParams) {
         lineMesh.geometry.attributes.position.needsUpdate = true;
         lineMesh.geometry.attributes.color.needsUpdate = true;
 
-        pointCloud.geometry.attributes.position.needsUpdate = true;
+        //pointCloud.geometry.attributes.position.needsUpdate = true;
 
         // auto rotate if needed
         const rotateSpeed = sceneParams.autoRotateSpeed;

@@ -10,10 +10,10 @@ const POINT_MATERIAL = new THREE.PointsMaterial({
 
 const SOLID_MATERIAL = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide,
-    color: 0x44bb99,
-    specular: 0xffffff,
-    shininess: 250,
-    vertexColors: true
+    color: 0x44cc99,
+    specular: 0xaaffff,
+    shininess: 1,
+    vertexColors: false,
 });
 
 
