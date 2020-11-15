@@ -10,10 +10,12 @@ export default function(maxParticleCount) {
     const onShowDotsChange = value => group.showPointCloud(value);
     const onShowLinesChange = value => group.showLineMesh(value);
 
-    const controls = uiControls(maxParticleCount, onParticleCountChange, onShowDotsChange, onShowLinesChange);
-    const group = sceneGraph(maxParticleCount, controls);
-
     const context = navContext('container');
+    const controls =
+        uiControls(maxParticleCount, context.getScene(),
+                   onParticleCountChange, onShowDotsChange, onShowLinesChange);
+
+    const group = sceneGraph(maxParticleCount, controls);
     context.add(group);
 
     animate();

@@ -40,6 +40,10 @@ export default function(containerId) {
         scene.add(group);
     }
 
+    my.getScene = function() {
+        return scene;
+    }
+
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();

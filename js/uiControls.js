@@ -1,4 +1,5 @@
 import { GUI } from './libs/dat.gui.module.js';
+import FogGUIHelper from './FogUIHelper.js';
 
 const effectController = {
     showDots: true,
@@ -11,7 +12,7 @@ const effectController = {
     particleSpeed: 4,
 };
 
-export default function(maxParticleCount,
+export default function(maxParticleCount, scene,
                         onParticleCountChange, onShowDotsChange, onShowLinesChange) {
 
    const gui = new GUI();
@@ -21,25 +22,34 @@ export default function(maxParticleCount,
    createSceneUI(gui);
 
    function createParticlesUI(gui) {
-        const particleFolder = gui.addFolder("Particles");
-        particleFolder.add(effectController, "particleCount", 0, maxParticleCount, 1).onChange(onParticleCountChange);
-        particleFolder.add(effectController, "particleSpeed", 0, 40, 1);
-        particleFolder.add(effectController, "showDots").onChange(onShowDotsChange);
-        particleFolder.open();
+       const particleFolder = gui.addFolder("Particles");
+       particleFolder.add(effectController, "particleCount", 0, maxParticleCount, 1).onChange(onParticleCountChange);
+       particleFolder.add(effectController, "particleSpeed", 0, 40, 1);
+       particleFolder.add(effectController, "showDots").onChange(onShowDotsChange);
+       particleFolder.open();
    }
 
    function createConnectionsUI(gui) {
-        const connectionsFolder = gui.addFolder("Connections");
-        connectionsFolder.add(effectController, "minDistance", 10, 300);
-        connectionsFolder.add(effectController, "limitConnections");
-        connectionsFolder.add(effectController, "maxConnections", 0, 30, 1);
-        connectionsFolder.add(effectController, "showLines").onChange(onShowLinesChange);
-        connectionsFolder.open();
+       const connectionsFolder = gui.addFolder("Connections");
+       connectionsFolder.add(effectController, "minDistance", 10, 300);
+       connectionsFolder.add(effectController, "limitConnections");
+       connectionsFolder.add(effectController, "maxConnections", 0, 30, 1);
+       connectionsFolder.add(effectController, "showLines").onChange(onShowLinesChange);
+       connectionsFolder.open();
    }
 
    function createSceneUI(gui) {
        const sceneFolder = gui.addFolder("Scene");
        sceneFolder.add(effectController, "autoRotateSpeed", 0, 10, 0.1);
+
+       const fog = scene.fog;
+       const fogGUIHelper = new FogGUIHelper(fog, scene.background);
+       const fogNear = fog.near;
+       const fogFar = fog.far;
+       sceneFolder.add(fogGUIHelper, 'fogNear', fogNear, fogFar).listen();
+       sceneFolder.add(fogGUIHelper, 'fogFar', fogNear, fogFar).listen();
+       sceneFolder.addColor(fogGUIHelper, 'color');
+
        sceneFolder.open();
    }
 
