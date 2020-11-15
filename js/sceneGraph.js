@@ -41,10 +41,11 @@ export default function(maxParticleCount, controls) {
         particlePositions[ i * 3 + 2 ] = z;
 
         // add it to the geometry
-        particlesData.push( {
-            velocity: new THREE.Vector3( - 1 + Math.random() * 2, - 1 + Math.random() * 2, - 1 + Math.random() * 2 ),
-            numConnections: 0
-        } );
+        const randomSpeed = () => - 1 + Math.random() * 2;
+        particlesData.push({
+            velocity: new THREE.Vector3( randomSpeed(), randomSpeed(), randomSpeed()),
+            numConnections: 0,
+        });
     }
 
     particles.setDrawRange( 0, controls.getParticleCount() );
@@ -83,10 +84,11 @@ export default function(maxParticleCount, controls) {
             // get the particle
             const particleData = particlesData[ i ];
             const effectController = controls.effectController;
+            const speedFactor = effectController.particleSpeed / 10;
 
-            particlePositions[ i * 3 ] += particleData.velocity.x;
-            particlePositions[ i * 3 + 1 ] += particleData.velocity.y;
-            particlePositions[ i * 3 + 2 ] += particleData.velocity.z;
+            particlePositions[ i * 3 ] += particleData.velocity.x * speedFactor;
+            particlePositions[ i * 3 + 1 ] += particleData.velocity.y * speedFactor;
+            particlePositions[ i * 3 + 2 ] += particleData.velocity.z * speedFactor;
 
             if ( particlePositions[ i * 3 + 1 ] < - rHalf || particlePositions[ i * 3 + 1 ] > rHalf )
                 particleData.velocity.y = - particleData.velocity.y;

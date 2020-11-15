@@ -13,6 +13,7 @@ export default function(maxParticleCount,
         maxConnections: 20,
         particleCount: 500,
         autoRotateSpeed: 0.2,
+        particleSpeed: 4,
     };
 
    gui.add(effectController, "showDots").onChange(onShowDotsChange);
@@ -22,6 +23,7 @@ export default function(maxParticleCount,
    gui.add(effectController, "limitConnections");
    gui.add(effectController, "maxConnections", 0, 30, 1);
    gui.add(effectController, "autoRotateSpeed", 0, 10, 0.1);
+   gui.add(effectController, "particleSpeed", 0, 40, 1);
    gui.add(effectController, "particleCount", 0, maxParticleCount, 1).onChange(onParticleCountChange);
 
    return {
