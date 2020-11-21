@@ -2,7 +2,7 @@ import { GUI } from '../libs/dat.gui.module.js';
 import FogGUIHelper from './FogUIHelper.js';
 
 export default function(maxParticleCount, fogHelper, sceneParams,
-                        onParticleCountChange, onShowDotsChange, onShowLinesChange) {
+                        onParticleCountChange, onShowPointsChange, onShowLinesChange) {
 
    const gui = new GUI();
 
@@ -12,9 +12,12 @@ export default function(maxParticleCount, fogHelper, sceneParams,
 
    function createParticlesUI(gui) {
        const particleFolder = gui.addFolder("Particles");
-       particleFolder.add(sceneParams, "particleCount", 0, maxParticleCount, 1).onChange(onParticleCountChange);
+       particleFolder.add(sceneParams, "particleCount", 0, maxParticleCount, 1)
+           .onChange(onParticleCountChange);
        particleFolder.add(sceneParams, "particleSpeed", 0, 40, 1);
-       particleFolder.add(sceneParams, "showDots").onChange(onShowDotsChange);
+       particleFolder.add(sceneParams, "showPoints")
+           .onChange(onShowPointsChange);
+       particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ])
        particleFolder.open();
    }
 
@@ -23,7 +26,8 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        connectionsFolder.add(sceneParams, "minDistance", 10, 300);
        connectionsFolder.add(sceneParams, "limitConnections");
        connectionsFolder.add(sceneParams, "maxConnections", 0, 30, 1);
-       connectionsFolder.add(sceneParams, "showLines").onChange(onShowLinesChange);
+       connectionsFolder.add(sceneParams, "showLines")
+           .onChange(onShowLinesChange);
        connectionsFolder.open();
    }
 
