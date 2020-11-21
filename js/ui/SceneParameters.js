@@ -14,5 +14,6 @@ export default class SceneParameters {
         this.particleSpeed = 2;
         this.particleGeometry = 'Point';
         this.oldParticleGeometry = null;
+        this.particleSize = 3;
     }
 }

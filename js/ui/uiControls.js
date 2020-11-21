@@ -11,29 +11,30 @@ export default function(maxParticleCount, fogHelper, sceneParams,
    createSceneUI(gui);
 
    function createParticlesUI(gui) {
-       const particleFolder = gui.addFolder("Particles");
-       particleFolder.add(sceneParams, "particleCount", 0, maxParticleCount, 1)
+       const particleFolder = gui.addFolder('Particles');
+       particleFolder.add(sceneParams, 'particleCount', 0, maxParticleCount, 1)
            .onChange(onParticleCountChange);
-       particleFolder.add(sceneParams, "particleSpeed", 0, 40, 1);
-       particleFolder.add(sceneParams, "showPoints")
+       particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
+       particleFolder.add(sceneParams, 'particleSize', 0.5, 40, 0.1);
+       particleFolder.add(sceneParams, 'showPoints')
            .onChange(onShowPointsChange);
        particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ])
        particleFolder.open();
    }
 
    function createConnectionsUI(gui) {
-       const connectionsFolder = gui.addFolder("Connections");
-       connectionsFolder.add(sceneParams, "minDistance", 10, 300);
-       connectionsFolder.add(sceneParams, "limitConnections");
-       connectionsFolder.add(sceneParams, "maxConnections", 0, 30, 1);
-       connectionsFolder.add(sceneParams, "showLines")
+       const connectionsFolder = gui.addFolder('Connections');
+       connectionsFolder.add(sceneParams, 'minDistance', 10, 300);
+       connectionsFolder.add(sceneParams, 'limitConnections');
+       connectionsFolder.add(sceneParams, 'maxConnections', 0, 30, 1);
+       connectionsFolder.add(sceneParams, 'showLines')
            .onChange(onShowLinesChange);
        connectionsFolder.open();
    }
 
    function createSceneUI(gui) {
-       const sceneFolder = gui.addFolder("Scene");
-       sceneFolder.add(sceneParams, "autoRotateSpeed", 0, 10, 0.1);
+       const sceneFolder = gui.addFolder('Scene');
+       sceneFolder.add(sceneParams, 'autoRotateSpeed', 0, 20, 0.1);
 
        //const fog = scene.fog;
        const fogNear = fogHelper.fogNear;

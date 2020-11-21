@@ -24,7 +24,9 @@ export default function(maxParticleCount, sceneParams) {
 
     group.showLineMesh = (value) => lineMesh.visible = value;
     group.showPointCloud = (value) => pointCloud.visible = value;
-    group.setNumParticlesToShow = (value) => particles.setDrawRange(0, value);
+    group.setNumParticlesToShow = (value) => {
+        particles.setDrawRange(0, value);
+    }
 
     group.animate = function() {
         const numConnected = particlesData.connectPoints(linesData, sceneParams);
@@ -44,17 +46,28 @@ export default function(maxParticleCount, sceneParams) {
 
         switch(geomType) {
             case 'Point' :
+                materials.POINT_MATERIAL.size = 3 * sceneParams.particleSize;
                 pointCloud.geometry.attributes.position.needsUpdate = true;
                 break;
             case 'Cube' :
             case 'Sphere' :
             case 'Sprite' :
+                const scale = sceneParams.particleSize;
                 for ( let i = 0; i < pointCloud.children.length; i ++ ) {
                     const object = pointCloud.children[i];
-                    const pt = particlesData.getPoint(i);
-                    object.position.x = pt.x;
-                    object.position.y = pt.y;
-                    object.position.z = pt.z;
+
+                    object.visible = i < sceneParams.particleCount;
+                    if (object.visible) {
+                        const pt = particlesData.getPoint(i);
+
+                        object.position.x = pt.x;
+                        object.position.y = pt.y;
+                        object.position.z = pt.z;
+
+                        object.scale.x = scale;
+                        object.scale.y = scale;
+                        object.scale.z = scale;
+                    }
                 }
                 break;
             default : throw new Error('Unexpected particleGeometry: ' + geomType);
@@ -72,42 +85,83 @@ export default function(maxParticleCount, sceneParams) {
 
 function createPointCloudGeometry(sceneParams, particles, particlesData) {
 
-    let pointCloud = null;
+    let pointCloud;
+    let geometry;
     const geomType = sceneParams.particleGeometry;
-    sceneParams.oldParticleGeometry = geomType
+    sceneParams.oldParticleGeometry = geomType;
+
 
     switch(geomType) {
         case 'Point' :
+            materials.POINT_MATERIAL.size = 3 * sceneParams.particleSize;
             pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL);
             break;
         case 'Cube' :
-        case 'Sphere' :
-        case 'Sprite' :
-            // This can be used to have the points show with real geometry like cubes or spheres.
             pointCloud = new THREE.Group();
-            //const geometry = new THREE.BoxBufferGeometry( 4, 5, 6 );
-            const geometry = new THREE.SphereBufferGeometry( 7, 10, 10 );
-            //const map = new THREE.TextureLoader().load( './images/appliance-icon.png' );
-            //const material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+            geometry = new THREE.BoxBufferGeometry( 3, 3, 3 );
 
             for ( let i = 0; i < particlesData.data.length; i ++ ) {
 
                 const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
-                //const object = new THREE.Sprite( material );
-                //object.scale.set(5, 5, 1); // for sprite
 
                 const pt = particlesData.getPoint(i);
                 object.position.x = pt.x;
                 object.position.y = pt.y;
                 object.position.z = pt.z;
+                object.visible = i < sceneParams.particleCount;
 
-                //object.rotation.x = Math.random() * 2 * Math.PI;
-                //object.rotation.y = Math.random() * 2 * Math.PI;
-                //object.rotation.z = Math.random() * 2 * Math.PI;
+                object.rotation.x = Math.random() * 2 * Math.PI;
+                object.rotation.y = Math.random() * 2 * Math.PI;
+                object.rotation.z = Math.random() * 2 * Math.PI;
 
-                //object.scale.x = Math.random() + 0.5;
-                //object.scale.y = Math.random() + 0.5;
-                //object.scale.z = Math.random() + 0.5;
+                object.scale.x = 1;
+                object.scale.y = 1;
+                object.scale.z = 1;
+
+                pointCloud.add( object );
+            }
+            break;
+        case 'Sphere' :
+            pointCloud = new THREE.Group();
+            geometry = new THREE.SphereBufferGeometry( 2, 10, 10 );
+
+            for ( let i = 0; i < particlesData.data.length; i ++ ) {
+
+                const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
+
+                const pt = particlesData.getPoint(i);
+                object.position.x = pt.x;
+                object.position.y = pt.y;
+                object.position.z = pt.z;
+                object.visible = i < sceneParams.particleCount;
+
+                object.scale.x = 1;
+                object.scale.y = 1;
+                object.scale.z = 1;
+
+                pointCloud.add( object );
+            }
+            break;
+        case 'Sprite' :
+            pointCloud = new THREE.Group();
+            const map = new THREE.TextureLoader().load( './images/appliance-icon.png' );
+            const material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+
+            for ( let i = 0; i < particlesData.data.length; i ++ ) {
+
+                //const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
+                const object = new THREE.Sprite( material );
+                object.scale.set(2, 2, 1); // for sprite
+
+                const pt = particlesData.getPoint(i);
+                object.position.x = pt.x;
+                object.position.y = pt.y;
+                object.position.z = pt.z;
+                object.visible = i < sceneParams.particleCount;
+
+                object.scale.x = 1;
+                object.scale.y = 1;
+                object.scale.z = 1;
 
                 pointCloud.add( object );
             }
@@ -119,7 +173,6 @@ function createPointCloudGeometry(sceneParams, particles, particlesData) {
 }
 
 function createParticles(particlesData) {
-    //const particles = new THREE.SphereBufferGeometry(20, 10, 10);
     const particles = new THREE.BufferGeometry();
     particles.setDrawRange( 0, particlesData.data.length);
     const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
