@@ -10,7 +10,6 @@ export default function(maxParticleCount) {
 
     const sceneParams = new SceneParameters();
 
-    const onParticleCountChange = value => group.setNumParticlesToShow(sceneParams.particleCount);
     const onShowPointsChange = value => group.showPointCloud(value);
     const onShowLinesChange = value => group.showLineMesh(value);
 
@@ -18,8 +17,7 @@ export default function(maxParticleCount) {
     const fogHelper = new FogGUIHelper(context.getScene());
 
     const controls =
-        uiControls(maxParticleCount, fogHelper, sceneParams,
-                   onParticleCountChange, onShowPointsChange, onShowLinesChange);
+        uiControls(maxParticleCount, fogHelper, sceneParams, onShowPointsChange, onShowLinesChange);
 
     const group = sceneGraph(maxParticleCount, sceneParams);
     context.add(group);

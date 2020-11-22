@@ -5,10 +5,10 @@ export default class ParticleGeom {
     constructor() {
     }
 
-    createPointCloud(sceneParams, particles, particlesData) {
+    createPointCloud(sceneParams, particlesData) {
     }
 
-    renderPointCloud(sceneParams, particles, particlesData) {
+    renderPointCloud(sceneParams, particlesData) {
         const scale = sceneParams.particleSize;
         const childObjects = this.pointCloud.children;
 

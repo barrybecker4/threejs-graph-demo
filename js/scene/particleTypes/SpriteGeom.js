@@ -11,7 +11,7 @@ export default class CubeGeom extends ParticleGeom {
         super();
     }
 
-    createPointCloud(sceneParams, particles, particlesData) {
+    createPointCloud(sceneParams, particlesData) {
 
         const pointCloud = new THREE.Group();
 

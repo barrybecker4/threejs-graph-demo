@@ -16,15 +16,28 @@ export default class PointGeom extends ParticleGeom {
         super();
     }
 
-    createPointCloud(sceneParams, particles, particlesData) {
+    createPointCloud(sceneParams, particlesData) {
         POINT_MATERIAL.size = 3 * sceneParams.particleSize;
-        this.pointCloud = new THREE.Points(particles, POINT_MATERIAL);
+        if (!this.particles) {
+            this.particles = this.createParticles(particlesData);
+        }
+        this.pointCloud = new THREE.Points(this.particles, POINT_MATERIAL);
         return this.pointCloud;
     }
 
-    renderPointCloud(sceneParams, particles, particlesData) {
+    renderPointCloud(sceneParams, particlesData) {
         POINT_MATERIAL.size = 3 * sceneParams.particleSize;
+        this.particles.setDrawRange(0, sceneParams.particleCount);
         this.pointCloud.geometry.attributes.position.needsUpdate = true;
+    }
+
+    // rename to points
+    createParticles(particlesData) {
+        const particles = new THREE.BufferGeometry();
+        particles.setDrawRange( 0, particlesData.data.length);
+        const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
+        particles.setAttribute('position', bufferedAttr);
+        return particles;
     }
 
 }

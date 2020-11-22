@@ -27,14 +27,13 @@ const GEOM_TYPE_TO_CONSTRUCTOR = {
 export default function(maxParticleCount, sceneParams) {
 
     const particlesData = new ParticlesData(maxParticleCount, R);
-    const particles = createParticles(particlesData);
     const linesData = new LinesData(maxParticleCount);
 
     const group = new THREE.Group();
     group.add(createBoxHelper(R));
 
     let particleGeom = createParticleGeometry(sceneParams);
-    let pointCloud = particleGeom.createPointCloud(sceneParams, particles, particlesData);
+    let pointCloud = particleGeom.createPointCloud(sceneParams, particlesData);
     group.add(pointCloud);
 
     const lineGeometry = createLineGeometry(linesData);
@@ -43,7 +42,6 @@ export default function(maxParticleCount, sceneParams) {
 
     group.showLineMesh = value => lineMesh.visible = value;
     group.showPointCloud = value => pointCloud.visible = value;
-    group.setNumParticlesToShow = value => particles.setDrawRange(0, value);
 
     group.animate = function() {
         const numConnected = particlesData.connectPoints(linesData, sceneParams);
@@ -58,13 +56,13 @@ export default function(maxParticleCount, sceneParams) {
             group.remove(pointCloud);
 
             particleGeom = createParticleGeometry(sceneParams);
-            pointCloud = particleGeom.createPointCloud(sceneParams, particles, particlesData);
+            pointCloud = particleGeom.createPointCloud(sceneParams, particlesData);
 
             group.add(pointCloud);
             sceneParams.oldParticleGeometry = geomType;
         }
 
-        particleGeom.renderPointCloud(sceneParams, particles, particlesData);
+        particleGeom.renderPointCloud(sceneParams, particlesData);
 
         // auto rotate if needed
         const rotateSpeed = sceneParams.autoRotateSpeed;
@@ -82,14 +80,6 @@ function createParticleGeometry(sceneParams) {
         throw new Error("Invalid particle type: " + sceneParams.particleGeometry);
     }
     return new constructor();
-}
-
-function createParticles(particlesData) {
-    const particles = new THREE.BufferGeometry();
-    particles.setDrawRange( 0, particlesData.data.length);
-    const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
-    particles.setAttribute('position', bufferedAttr);
-    return particles;
 }
 
 function createLineGeometry(linesData) {
