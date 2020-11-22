@@ -16,10 +16,11 @@ export default class CubeGeom extends ParticleGeom {
 
         const pointCloud = new THREE.Group();
         const geometry = new THREE.SphereBufferGeometry( 2, 16, 16 );
+        geometry.computeBoundingBox();
 
         for ( let i = 0; i < particlesData.data.length; i ++ ) {
 
-            const object = new THREE.Mesh(geometry, SPHERE_MATERIAL);
+            const object = new THREE.Mesh(geometry, SPHERE_MATERIAL.clone());
 
             const pt = particlesData.getPoint(i);
             object.position.x = pt.x;

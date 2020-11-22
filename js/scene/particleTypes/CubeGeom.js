@@ -1,7 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import ParticleGeom from './ParticleGeom.js';
 
-const CUBE_MATERIAL = new THREE.MeshPhongMaterial({
+const CUBE_MATERIAL = new THREE.MeshLambertMaterial({
     side: THREE.DoubleSide,
     color: 0x44cc99,
     specular: 0xaaffff,
@@ -16,10 +16,11 @@ export default class CubeGeom extends ParticleGeom {
 
         const pointCloud = new THREE.Group();
         const geometry = new THREE.BoxBufferGeometry(3, 3, 3);
+        geometry.computeBoundingBox();
 
         for ( let i = 0; i < particlesData.data.length; i ++ ) {
 
-            const object = new THREE.Mesh(geometry, CUBE_MATERIAL);
+            const object = new THREE.Mesh(geometry, CUBE_MATERIAL.clone());
 
             const pt = particlesData.getPoint(i);
             object.position.x = pt.x;

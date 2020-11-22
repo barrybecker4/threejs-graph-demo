@@ -10,7 +10,7 @@ export default class SceneParameters {
         this.limitConnections = false;
         this.maxConnections = 20;
         this.particleCount = 500;
-        this.autoRotateSpeed = 0.2;
+        this.autoRotateSpeed = 0.0;
         this.particleSpeed = 2;
         this.particleGeometry = 'Point';
         this.oldParticleGeometry = null;

@@ -20,7 +20,7 @@ export default function(maxParticleCount) {
         uiControls(maxParticleCount, fogHelper, sceneParams, onShowPointsChange, onShowLinesChange);
 
     const group = sceneGraph(maxParticleCount, sceneParams);
-    context.add(group);
+    context.setSceneRoot(group);
 
     animate();
 
