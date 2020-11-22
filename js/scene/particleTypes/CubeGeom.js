@@ -12,10 +12,6 @@ const CUBE_MATERIAL = new THREE.MeshPhongMaterial({
 
 export default class CubeGeom extends ParticleGeom {
 
-    constructor() {
-        super();
-    }
-
     createPointCloud(sceneParams, particlesData) {
 
         const pointCloud = new THREE.Group();

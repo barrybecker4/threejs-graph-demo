@@ -12,32 +12,27 @@ const POINT_MATERIAL = new THREE.PointsMaterial({
 
 export default class PointGeom extends ParticleGeom {
 
-    constructor() {
-        super();
-    }
-
     createPointCloud(sceneParams, particlesData) {
-        POINT_MATERIAL.size = 3 * sceneParams.particleSize;
-        if (!this.particles) {
-            this.particles = this.createParticles(particlesData);
+        if (!this.points) {
+            this.points = this.createPoints(particlesData);
         }
-        this.pointCloud = new THREE.Points(this.particles, POINT_MATERIAL);
+        this.pointCloud = new THREE.Points(this.points, POINT_MATERIAL);
         return this.pointCloud;
     }
 
     renderPointCloud(sceneParams, particlesData) {
         POINT_MATERIAL.size = 3 * sceneParams.particleSize;
-        this.particles.setDrawRange(0, sceneParams.particleCount);
+        this.points.setDrawRange(0, sceneParams.particleCount);
         this.pointCloud.geometry.attributes.position.needsUpdate = true;
     }
 
     // rename to points
-    createParticles(particlesData) {
-        const particles = new THREE.BufferGeometry();
-        particles.setDrawRange( 0, particlesData.data.length);
+    createPoints(particlesData) {
+        const points = new THREE.BufferGeometry();
+        points.setDrawRange( 0, particlesData.data.length);
         const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
-        particles.setAttribute('position', bufferedAttr);
-        return particles;
+        points.setAttribute('position', bufferedAttr);
+        return points;
     }
 
 }

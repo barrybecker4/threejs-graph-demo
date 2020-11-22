@@ -2,9 +2,6 @@
 
 export default class ParticleGeom {
 
-    constructor() {
-    }
-
     createPointCloud(sceneParams, particlesData) {
     }
 

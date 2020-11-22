@@ -7,10 +7,6 @@ const SPRITE_MATERIAL = new THREE.SpriteMaterial( { map: map, color: 0xffffff } 
 
 export default class CubeGeom extends ParticleGeom {
 
-    constructor() {
-        super();
-    }
-
     createPointCloud(sceneParams, particlesData) {
 
         const pointCloud = new THREE.Group();
