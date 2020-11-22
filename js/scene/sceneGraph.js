@@ -1,10 +1,28 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
-import materials from './materials.js';
 import ParticlesData from './ParticlesData.js';
 import LinesData from './LinesData.js';
+import PointGeom from './particleTypes/PointGeom.js';
+import CubeGeom from './particleTypes/CubeGeom.js';
+import SphereGeom from './particleTypes/SphereGeom.js';
+import SpriteGeom from './particleTypes/SpriteGeom.js'
 
 // edge length of the bounding cube
 const R = 800;
+
+const LINE_MATERIAL = new THREE.LineBasicMaterial( {
+    color: 0xAB3BBB,
+    linewidth: 3,
+    vertexColors: true,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+});
+
+const GEOM_TYPE_TO_CONSTRUCTOR = {
+    Point : PointGeom,
+    Cube: CubeGeom,
+    Sphere: SphereGeom,
+    Sprite: SpriteGeom,
+}
 
 export default function(maxParticleCount, sceneParams) {
 
@@ -13,20 +31,19 @@ export default function(maxParticleCount, sceneParams) {
     const linesData = new LinesData(maxParticleCount);
 
     const group = new THREE.Group();
-    group.add( createBoxHelper(R) );
+    group.add(createBoxHelper(R));
 
-    let pointCloud = createPointCloudGeometry(sceneParams, particles, particlesData);
+    let particleGeom = createParticleGeometry(sceneParams);
+    let pointCloud = particleGeom.createPointCloud(sceneParams, particles, particlesData);
     group.add(pointCloud);
 
     const lineGeometry = createLineGeometry(linesData);
-    const lineMesh = new THREE.LineSegments( lineGeometry, materials.LINE_MATERIAL);
+    const lineMesh = new THREE.LineSegments( lineGeometry, LINE_MATERIAL);
     group.add( lineMesh );
 
-    group.showLineMesh = (value) => lineMesh.visible = value;
-    group.showPointCloud = (value) => pointCloud.visible = value;
-    group.setNumParticlesToShow = (value) => {
-        particles.setDrawRange(0, value);
-    }
+    group.showLineMesh = value => lineMesh.visible = value;
+    group.showPointCloud = value => pointCloud.visible = value;
+    group.setNumParticlesToShow = value => particles.setDrawRange(0, value);
 
     group.animate = function() {
         const numConnected = particlesData.connectPoints(linesData, sceneParams);
@@ -39,39 +56,15 @@ export default function(maxParticleCount, sceneParams) {
         if (geomType != sceneParams.oldParticleGeometry) {
             console.log("changing from  = " + sceneParams.oldParticleGeometry + " to " + geomType);
             group.remove(pointCloud);
-            pointCloud = createPointCloudGeometry(sceneParams, particles, particlesData);
+
+            particleGeom = createParticleGeometry(sceneParams);
+            pointCloud = particleGeom.createPointCloud(sceneParams, particles, particlesData);
+
             group.add(pointCloud);
             sceneParams.oldParticleGeometry = geomType;
         }
 
-        switch(geomType) {
-            case 'Point' :
-                materials.POINT_MATERIAL.size = 3 * sceneParams.particleSize;
-                pointCloud.geometry.attributes.position.needsUpdate = true;
-                break;
-            case 'Cube' :
-            case 'Sphere' :
-            case 'Sprite' :
-                const scale = sceneParams.particleSize;
-                for ( let i = 0; i < pointCloud.children.length; i ++ ) {
-                    const object = pointCloud.children[i];
-
-                    object.visible = i < sceneParams.particleCount;
-                    if (object.visible) {
-                        const pt = particlesData.getPoint(i);
-
-                        object.position.x = pt.x;
-                        object.position.y = pt.y;
-                        object.position.z = pt.z;
-
-                        object.scale.x = scale;
-                        object.scale.y = scale;
-                        object.scale.z = scale;
-                    }
-                }
-                break;
-            default : throw new Error('Unexpected particleGeometry: ' + geomType);
-        }
+        particleGeom.renderPointCloud(sceneParams, particles, particlesData);
 
         // auto rotate if needed
         const rotateSpeed = sceneParams.autoRotateSpeed;
@@ -83,93 +76,12 @@ export default function(maxParticleCount, sceneParams) {
     return group;
 }
 
-function createPointCloudGeometry(sceneParams, particles, particlesData) {
-
-    let pointCloud;
-    let geometry;
-    const geomType = sceneParams.particleGeometry;
-    sceneParams.oldParticleGeometry = geomType;
-
-
-    switch(geomType) {
-        case 'Point' :
-            materials.POINT_MATERIAL.size = 3 * sceneParams.particleSize;
-            pointCloud = new THREE.Points(particles, materials.POINT_MATERIAL);
-            break;
-        case 'Cube' :
-            pointCloud = new THREE.Group();
-            geometry = new THREE.BoxBufferGeometry( 3, 3, 3 );
-
-            for ( let i = 0; i < particlesData.data.length; i ++ ) {
-
-                const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
-
-                const pt = particlesData.getPoint(i);
-                object.position.x = pt.x;
-                object.position.y = pt.y;
-                object.position.z = pt.z;
-                object.visible = i < sceneParams.particleCount;
-
-                object.rotation.x = Math.random() * 2 * Math.PI;
-                object.rotation.y = Math.random() * 2 * Math.PI;
-                object.rotation.z = Math.random() * 2 * Math.PI;
-
-                object.scale.x = 1;
-                object.scale.y = 1;
-                object.scale.z = 1;
-
-                pointCloud.add( object );
-            }
-            break;
-        case 'Sphere' :
-            pointCloud = new THREE.Group();
-            geometry = new THREE.SphereBufferGeometry( 2, 10, 10 );
-
-            for ( let i = 0; i < particlesData.data.length; i ++ ) {
-
-                const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
-
-                const pt = particlesData.getPoint(i);
-                object.position.x = pt.x;
-                object.position.y = pt.y;
-                object.position.z = pt.z;
-                object.visible = i < sceneParams.particleCount;
-
-                object.scale.x = 1;
-                object.scale.y = 1;
-                object.scale.z = 1;
-
-                pointCloud.add( object );
-            }
-            break;
-        case 'Sprite' :
-            pointCloud = new THREE.Group();
-            const map = new THREE.TextureLoader().load( './images/appliance-icon.png' );
-            const material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
-
-            for ( let i = 0; i < particlesData.data.length; i ++ ) {
-
-                //const object = new THREE.Mesh( geometry, materials.SOLID_MATERIAL);
-                const object = new THREE.Sprite( material );
-                object.scale.set(2, 2, 1); // for sprite
-
-                const pt = particlesData.getPoint(i);
-                object.position.x = pt.x;
-                object.position.y = pt.y;
-                object.position.z = pt.z;
-                object.visible = i < sceneParams.particleCount;
-
-                object.scale.x = 1;
-                object.scale.y = 1;
-                object.scale.z = 1;
-
-                pointCloud.add( object );
-            }
-            break;
-        default: throw new Error('Unexpected type: ' + geomType);
+function createParticleGeometry(sceneParams) {
+    const constructor = GEOM_TYPE_TO_CONSTRUCTOR[sceneParams.particleGeometry];
+    if (!constructor) {
+        throw new Error("Invalid particle type: " + sceneParams.particleGeometry);
     }
-
-    return pointCloud;
+    return new constructor();
 }
 
 function createParticles(particlesData) {
