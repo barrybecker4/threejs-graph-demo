@@ -3,6 +3,7 @@
 export default class LinesData {
 
     constructor(maxParticleCount) {
+        // this allocates a lot of memory
         const maxLines = maxParticleCount * maxParticleCount;
 
         this.positions = new Float32Array( maxLines * 3 );

@@ -14,7 +14,7 @@ export default class PointGeom extends ParticleGeom {
 
     createPointCloud(sceneParams, particlesData) {
         if (!this.points) {
-            this.points = this.createPoints(particlesData);
+            this.points = createPoints(particlesData);
         }
         this.pointCloud = new THREE.Points(this.points, POINT_MATERIAL);
         return this.pointCloud;
@@ -26,13 +26,13 @@ export default class PointGeom extends ParticleGeom {
         this.pointCloud.geometry.attributes.position.needsUpdate = true;
     }
 
-    // rename to points
-    createPoints(particlesData) {
-        const points = new THREE.BufferGeometry();
-        points.setDrawRange( 0, particlesData.data.length);
-        const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
-        points.setAttribute('position', bufferedAttr);
-        return points;
-    }
+}
 
+
+function createPoints(particlesData) {
+    const points = new THREE.BufferGeometry();
+    points.setDrawRange( 0, particlesData.data.length);
+    const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
+    points.setAttribute('position', bufferedAttr);
+    return points;
 }

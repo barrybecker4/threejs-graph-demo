@@ -59,6 +59,7 @@ export default class ParticlesData {
             velocity.z = -velocity.z;
     }
 
+    // Note: this is N^2 in number of particles
     connectPoints(linesData, sceneParams) {
         let idx = 0;
         let numConnected = 0;
