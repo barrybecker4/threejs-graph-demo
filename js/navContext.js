@@ -41,7 +41,7 @@ export default function(containerId) {
 
     my.render = function() {
         stats.update();
-        pickHelper.pick(sceneRoot, camera);
+        pickHelper.pick(sceneRoot, camera, controls);
         renderer.render(scene, camera);
     }
 

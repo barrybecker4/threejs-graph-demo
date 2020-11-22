@@ -10,7 +10,7 @@ export default class PickHelper {
         this.pickPosition = null;
     }
 
-    pick(sceneRoot, camera) {
+    pick(sceneRoot, camera, controls) {
         if (!this.pickPosition) return;
 
         // restore the color if there is a picked object
@@ -28,12 +28,44 @@ export default class PickHelper {
             // pick the first object. It's the closest one
             this.pickedObject = intersectedObjects[0].object;
             // save its color
+
             const material = this.pickedObject.material;
             this.pickedObjectSavedColor = material.color.getHex();
             console.log("color = " + JSON.stringify(material.color));
+
+            this.navigateToSelected(camera, controls);
+
             material.color.setHex(0xFFFF77);
         }
         this.pickPosition = undefined;
+    }
+
+    navigateToSelected(camera, controls) {
+        //camera.lookAt(this.pickedObject.position); // simply oritents the camera
+
+        //var newQuaternion = new THREE.Quaternion();
+        //THREE.Quaternion.slerp(camera.quaternion, this.pickedObject.quaternion, newQuaternion, 0.07);
+        //camera.quaternion = newQuaternion;
+
+        var startQ = camera.quaternion.clone();
+        camera.lookAt(this.pickedObject.position);
+        var endQ = camera.quaternion.clone();
+
+        //Number of animation frames
+        var animFrames = 100;
+        //Pause between two consecutive animation frames
+        var deltaT = 1;
+        function interpolate(acc) {
+              if (acc >= 1) return;
+
+              THREE.Quaternion.slerp(startQ, endQ, camera.quaternion, acc);
+              setTimeout(function() {
+                  interpolate(acc + (1 / animFrames));
+              }, deltaT);
+        }
+        interpolate(1 / animFrames);
+
+        controls.target = this.pickedObject.position;
     }
 
     static getCanvasRelativePosition(event, container) {

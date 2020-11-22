@@ -12,7 +12,7 @@ export default class SceneParameters {
         this.particleCount = 500;
         this.autoRotateSpeed = 0.0;
         this.particleSpeed = 2;
-        this.particleGeometry = 'Point';
+        this.particleGeometry = 'Cube';
         this.oldParticleGeometry = null;
         this.particleSize = 3;
     }
