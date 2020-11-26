@@ -92,6 +92,8 @@ export default class ParticlesData {
 
                 const pti = this.getPoint(i);
                 const ptj = this.getPoint(j);
+
+
                 const dist = ParticlesData.distance(pti, ptj);
 
                 if ( dist < sceneParams.minDistance ) {

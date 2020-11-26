@@ -1,12 +1,14 @@
 import { GUI } from '../libs/dat.gui.module.js';
 import FogGUIHelper from './FogUIHelper.js';
 
-export default function(maxParticleCount, fogHelper, sceneParams, onShowPointsChange, onShowLinesChange) {
+export default function(maxParticleCount, fogHelper, sceneParams,
+                        onShowPointsChange, onShowLinesChange, onShowGlobeChange) {
 
    const gui = new GUI();
 
    createParticlesUI(gui);
    createConnectionsUI(gui);
+   createGlobeUI(gui);
    createSceneUI(gui);
 
    function createParticlesUI(gui) {
@@ -14,8 +16,7 @@ export default function(maxParticleCount, fogHelper, sceneParams, onShowPointsCh
        particleFolder.add(sceneParams, 'particleCount', 0, maxParticleCount, 1)
        particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
        particleFolder.add(sceneParams, 'particleSize', 0.5, 40, 0.1);
-       particleFolder.add(sceneParams, 'showPoints')
-           .onChange(onShowPointsChange);
+       particleFolder.add(sceneParams, 'showPoints').onChange(onShowPointsChange);
        particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ])
        particleFolder.open();
    }
@@ -25,9 +26,16 @@ export default function(maxParticleCount, fogHelper, sceneParams, onShowPointsCh
        connectionsFolder.add(sceneParams, 'minDistance', 10, 300);
        connectionsFolder.add(sceneParams, 'limitConnections');
        connectionsFolder.add(sceneParams, 'maxConnections', 0, 30, 1);
-       connectionsFolder.add(sceneParams, 'showLines')
-           .onChange(onShowLinesChange);
+       connectionsFolder.add(sceneParams, 'showLines').onChange(onShowLinesChange);
        connectionsFolder.open();
+   }
+
+   function createGlobeUI(gui) {
+      const globeFolder = gui.addFolder('Globe');
+      globeFolder.add(sceneParams, 'globeRadius', 0, 1000, 10);
+      globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
+      globeFolder.add(sceneParams, 'showGlobe').onChange(onShowGlobeChange);
+      globeFolder.open();
    }
 
    function createSceneUI(gui) {

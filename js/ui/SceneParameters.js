@@ -6,6 +6,7 @@ export default class SceneParameters {
     constructor() {
         this.showPoints = true;
         this.showLines = true;
+        this.showGlobe = false;
         this.minDistance = 150;
         this.limitConnections = false;
         this.maxConnections = 20;
@@ -15,5 +16,8 @@ export default class SceneParameters {
         this.particleGeometry = 'Cube';
         this.oldParticleGeometry = null;
         this.particleSize = 3;
+        this.globeRadius = 0;
+        this.atmosphereThickness = 1.0;
     }
 }
+

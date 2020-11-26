@@ -12,12 +12,14 @@ export default function(maxParticleCount) {
 
     const onShowPointsChange = value => group.showPointCloud(value);
     const onShowLinesChange = value => group.showLineMesh(value);
+    const onShowGlobeChange = value => console.log("show globe: " + value);
 
     const context = navContext('container');
     const fogHelper = new FogGUIHelper(context.getScene());
 
     const controls =
-        uiControls(maxParticleCount, fogHelper, sceneParams, onShowPointsChange, onShowLinesChange);
+        uiControls(maxParticleCount, fogHelper, sceneParams,
+                   onShowPointsChange, onShowLinesChange, onShowGlobeChange);
 
     const group = sceneGraph(maxParticleCount, sceneParams);
     context.setSceneRoot(group);
