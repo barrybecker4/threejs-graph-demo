@@ -1,7 +1,8 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import ParticlesData from './ParticlesData.js';
 import LinesData from './LinesData.js';
-import LineGeom from './LineGeom.js';
+import StraightLineGeom from './lineTypes/StraightLineGeom.js';
+import ArcedLineGeom from './lineTypes/ArcedLineGeom.js';
 import PointGeom from './particleTypes/PointGeom.js';
 import CubeGeom from './particleTypes/CubeGeom.js';
 import SphereGeom from './particleTypes/SphereGeom.js';
@@ -10,11 +11,16 @@ import SpriteGeom from './particleTypes/SpriteGeom.js'
 // edge length of the bounding cube
 const R = 800;
 
-const GEOM_TYPE_TO_CONSTRUCTOR = {
+const POINT_TYPE_TO_CONSTRUCTOR = {
     Point : PointGeom,
     Cube: CubeGeom,
     Sphere: SphereGeom,
     Sprite: SpriteGeom,
+}
+
+const LINE_TYPE_TO_CONSTRUCTOR = {
+    Line : StraightLineGeom,
+    Arcs: ArcedLineGeom,
 }
 
 export default function(maxParticleCount, sceneParams) {
@@ -29,27 +35,38 @@ export default function(maxParticleCount, sceneParams) {
     let pointCloud = particleGeom.createPointCloud(sceneParams, particlesData);
     group.add(pointCloud);
 
-    const lineGeom = new LineGeom(linesData);
-    group.add( lineGeom.lineMesh );
+    let lineGeom = createLineGeometry(sceneParams);
+    let lineCloud = lineGeom.createLineCloud(sceneParams, linesData);
+    group.add(lineCloud);
 
-    group.showLineMesh = value => lineGeom.lineMesh.visible = value;
+    group.showLineMesh = value => lineGeom.lineCloud.visible = value;
     group.showPointCloud = value => pointCloud.visible = value;
 
     group.animate = function() {
         const numConnected = particlesData.connectPoints(linesData, sceneParams);
 
-        lineGeom.render(numConnected);
+        const lineType = sceneParams.lineGeometry;
+        if (lineType != sceneParams.oldLineGeometry) {
+            group.remove(lineCloud);
 
-        const geomType = sceneParams.particleGeometry;
-        if (geomType != sceneParams.oldParticleGeometry) {
-            console.log("changing from  = " + sceneParams.oldParticleGeometry + " to " + geomType);
+            lineGeom = createLineGeometry(sceneParams);
+            lineCloud = lineGeom.createLineCloud(sceneParams, linesData);
+
+            group.add(lineCloud);
+            sceneParams.oldLineGeometry = lineType;
+        }
+
+        lineGeom.renderLineCloud(sceneParams, particlesData, numConnected);
+
+        const particleType = sceneParams.particleGeometry;
+        if (particleType != sceneParams.oldParticleGeometry) {
             group.remove(pointCloud);
 
             particleGeom = createParticleGeometry(sceneParams);
             pointCloud = particleGeom.createPointCloud(sceneParams, particlesData);
 
             group.add(pointCloud);
-            sceneParams.oldParticleGeometry = geomType;
+            sceneParams.oldParticleGeometry = particleType;
         }
 
         particleGeom.renderPointCloud(sceneParams, particlesData);
@@ -65,9 +82,17 @@ export default function(maxParticleCount, sceneParams) {
 }
 
 function createParticleGeometry(sceneParams) {
-    const constructor = GEOM_TYPE_TO_CONSTRUCTOR[sceneParams.particleGeometry];
+    const constructor = POINT_TYPE_TO_CONSTRUCTOR[sceneParams.particleGeometry];
     if (!constructor) {
         throw new Error("Invalid particle type: " + sceneParams.particleGeometry);
+    }
+    return new constructor();
+}
+
+function createLineGeometry(sceneParams) {
+    const constructor = LINE_TYPE_TO_CONSTRUCTOR[sceneParams.lineGeometry];
+    if (!constructor) {
+        throw new Error("Invalid line type: " + sceneParams.lineGeometry);
     }
     return new constructor();
 }

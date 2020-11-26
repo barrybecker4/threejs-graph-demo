@@ -31,7 +31,6 @@ export default class PickHelper {
 
             const material = this.pickedObject.material;
             this.pickedObjectSavedColor = material.color.getHex();
-            console.log("color = " + JSON.stringify(material.color));
 
             this.navigateToSelected(camera, controls);
 

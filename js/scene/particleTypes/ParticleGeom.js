@@ -1,5 +1,5 @@
 
-
+// abstract base class
 export default class ParticleGeom {
 
     createPointCloud(sceneParams, particlesData) {

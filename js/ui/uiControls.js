@@ -17,7 +17,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
        particleFolder.add(sceneParams, 'particleSize', 0.5, 40, 0.1);
        particleFolder.add(sceneParams, 'showPoints').onChange(onShowPointsChange);
-       particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ])
+       particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ]);
        particleFolder.open();
    }
 
@@ -26,13 +26,14 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        connectionsFolder.add(sceneParams, 'minDistance', 10, 300);
        connectionsFolder.add(sceneParams, 'limitConnections');
        connectionsFolder.add(sceneParams, 'maxConnections', 0, 30, 1);
+       connectionsFolder.add(sceneParams, 'lineGeometry', [ 'Line', 'Arc' ]);
        connectionsFolder.add(sceneParams, 'showLines').onChange(onShowLinesChange);
        connectionsFolder.open();
    }
 
    function createGlobeUI(gui) {
       const globeFolder = gui.addFolder('Globe');
-      globeFolder.add(sceneParams, 'globeRadius', 0, 1000, 10);
+      globeFolder.add(sceneParams, 'globeRadius', 0, 800, 10);
       globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
       globeFolder.add(sceneParams, 'showGlobe').onChange(onShowGlobeChange);
       globeFolder.open();
