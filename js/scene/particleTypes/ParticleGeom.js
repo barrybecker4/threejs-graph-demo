@@ -17,20 +17,11 @@ export default class ParticleGeom {
 
             object.visible = i < sceneParams.particleCount;
             if (object.visible) {
-                const pt = particlesData.getPoint(i);
+                const pt = particlesData.getPoint(i).getSpherePosition(rad, thickness);
 
-                // adjust by globeRadius and atmosphereThickness
-
-                // first find unit vector and magnitude
-                // point will be unitVec * globeRadius + unitVec * magnitude * atmosphereThickness
-
-                const magnitude = Math.sqrt(pt.x * pt.x + pt.y * pt.y + pt.z * pt.z);
-                const unitVec = { x: pt.x / magnitude, y: pt.y / magnitude, z: pt.z / magnitude };
-                const r = rad + magnitude * thickness;
-
-                object.position.x = unitVec.x * r;
-                object.position.y = unitVec.y * r;
-                object.position.z = unitVec.z * r;
+                object.position.x = pt.x;
+                object.position.y = pt.y;
+                object.position.z = pt.z;
 
                 object.scale.x = scale;
                 object.scale.y = scale;

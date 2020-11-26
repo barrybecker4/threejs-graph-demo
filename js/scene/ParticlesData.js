@@ -1,5 +1,5 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
-
+import Point from './Point.js'
 
 export default class ParticlesData {
 
@@ -36,7 +36,7 @@ export default class ParticlesData {
     getPoint(i) {
         const positions = this.positions;
         const ii = 3 * i;
-        return { x: positions[ii], y: positions[ii + 1], z: positions[ii + 2]};
+        return new Point(positions[ii], positions[ii + 1], positions[ii + 2]);
     }
 
     updatePositionAndVelocity(i, speedFactor) {
@@ -66,6 +66,8 @@ export default class ParticlesData {
         const particleCount = sceneParams.particleCount;
         const limitConnections = sceneParams.limitConnections;
         const maxConnections = sceneParams.maxConnections;
+        const globeRadius = sceneParams.globeRadius;
+        const atmThickness = sceneParams.atmosphereThickness;
 
         for ( let i = 0; i < particleCount; i ++ ) {
             this.data[i].numConnections = 0;
@@ -90,11 +92,10 @@ export default class ParticlesData {
                 if (limitConnections && particleDataB.numConnections >= maxConnections )
                     continue;
 
-                const pti = this.getPoint(i);
-                const ptj = this.getPoint(j);
+                const pti = this.getPoint(i).getSpherePosition(globeRadius, atmThickness);
+                const ptj = this.getPoint(j).getSpherePosition(globeRadius, atmThickness);
 
-
-                const dist = ParticlesData.distance(pti, ptj);
+                const dist = pti.distanceTo(ptj);
 
                 if ( dist < sceneParams.minDistance ) {
 
@@ -109,12 +110,5 @@ export default class ParticlesData {
             }
         }
         return numConnected;
-    }
-
-    static distance(pti, ptj) {
-        const dx = pti.x - ptj.x;
-        const dy = pti.y - ptj.y;
-        const dz = pti.z - ptj.z;
-        return Math.sqrt( dx * dx + dy * dy + dz * dz );
     }
 }
