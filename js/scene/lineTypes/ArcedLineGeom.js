@@ -14,7 +14,7 @@ const LINE_MATERIAL = new THREE.LineBasicMaterial( {
 });
 
 // Number of line segments in the arc
-const NUM_SEGMENTS = 10;
+const NUM_SEGMENTS = 9;
 
 export default class ArcedLineGeom extends LineGeom {
 
