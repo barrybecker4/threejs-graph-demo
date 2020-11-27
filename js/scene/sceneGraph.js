@@ -20,7 +20,7 @@ const POINT_TYPE_TO_CONSTRUCTOR = {
 
 const LINE_TYPE_TO_CONSTRUCTOR = {
     Line : StraightLineGeom,
-    Arcs: ArcedLineGeom,
+    Arc: ArcedLineGeom,
 }
 
 export default function(maxParticleCount, sceneParams) {
@@ -33,6 +33,7 @@ export default function(maxParticleCount, sceneParams) {
 
     let particleGeom = createParticleGeometry(sceneParams);
     let pointCloud = particleGeom.createPointCloud(sceneParams, particlesData);
+
     group.add(pointCloud);
 
     let lineGeom = createLineGeometry(sceneParams);
@@ -56,7 +57,7 @@ export default function(maxParticleCount, sceneParams) {
             sceneParams.oldLineGeometry = lineType;
         }
 
-        lineGeom.renderLineCloud(sceneParams, particlesData, numConnected);
+        lineGeom.renderLineCloud(sceneParams, linesData, numConnected);
 
         const particleType = sceneParams.particleGeometry;
         if (particleType != sceneParams.oldParticleGeometry) {

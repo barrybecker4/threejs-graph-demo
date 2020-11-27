@@ -2,39 +2,105 @@ import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import LineGeom from './LineGeom.js';
 
 const LINE_MATERIAL = new THREE.LineBasicMaterial( {
-    color: 0xAB3BBB,
-    linewidth: 3,
-    vertexColors: true,
+    color: 0xFF3BFF, //0xAB3BBB,
+    linewidth: 2,
+    vertexColors: false, //true,
     blending: THREE.AdditiveBlending,
     transparent: true,
+    opacity: 0.99,
+    side: THREE.DoubleSide,
+    //emissive: 0xff8800,
+    //emissiveIntensity: 0.9,
 });
 
+// Number of line segments in the arc
+const NUM_SEGMENTS = 10;
 
 export default class ArcedLineGeom extends LineGeom {
 
     createLineCloud(sceneParams, linesData) {
-        if (!this.lineGeometry) {
-            this.lineGeometry = createLineGeometry(linesData);
+
+        const lineCloud = new THREE.Group();
+        this.arcs = [];
+
+        function rand() {
+            return 1; //Math.random() * 80 - 40;
         }
-        this.lineCloud = new THREE.LineSegments(lineGeometry, LINE_MATERIAL);
-        return this.lineCloud;
+
+        for ( let i = 0; i < linesData.maxLines; i++ ) {
+
+            const curve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3( rand(), rand(), rand() ),
+                new THREE.Vector3( rand(), rand(), rand() ),
+                new THREE.Vector3( rand(), rand(), rand() )
+            );
+
+            const points = curve.getPoints( NUM_SEGMENTS );
+            const geometry = new THREE.BufferGeometry().setFromPoints( points );
+            const arc = new THREE.Line(geometry, LINE_MATERIAL);
+
+            arc.curve = curve;
+            arc.visible = false;
+            this.arcs.push(arc);
+
+            lineCloud.add(arc);
+        }
+
+        this.lineCloud = lineCloud;
+        return lineCloud;
     }
 
-    renderLineCloud(numConnected) {
-        const geom = this.lineCloud.geometry;
-        geom.setDrawRange(0, numConnected * 2);
-        geom.attributes.position.needsUpdate = true;
-        geom.attributes.color.needsUpdate = true;
+    renderLineCloud(sceneParams, linesData, numConnected) {
+        const arcHeight = sceneParams.arcHeight;
+        //console.log("numConnected = " + numConnected);
+
+        // there are numConnected arcs - each connecting 2 points
+        for (let i = 0; i < numConnected; i++) {
+            const arc = this.arcs[i];
+
+            const pt1 = linesData.getPoint(2 * i);
+            const pt2 = linesData.getPoint(2 * i + 1);
+            const controlPt = findControlPoint(pt1, pt2, arcHeight);
+
+            const curve = arc.curve;
+            curve.v0.set(pt1.x, pt1.y, pt1.z);
+            curve.v1.set(controlPt.x, controlPt.y, controlPt.z);
+            curve.v2.set(pt2.x, pt2.y, pt2.z);
+
+            arc.geometry.dispose();
+            arc.material.dispose();
+
+            arc.geometry.setFromPoints(curve.getPoints(NUM_SEGMENTS));
+            arc.geometry.verticesNeedUpdate;
+            //const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(NUM_SEGMENTS));
+            //arc.geometry.dispose();
+            //arc.geometry = geometry;
+
+            arc.visible = true;
+        }
+        //this.lineCloud.verticesNeedUpdate = true;
+
+        this.hideRemainingLines(linesData, numConnected);
     }
+
+    hideRemainingLines(linesData, numConnected) {
+        let visible = true;
+        let i = numConnected;
+        while (i < linesData.maxLines && visible) {
+            const object = this.arcs[i];
+            visible = object.visible;
+            object.visible = false;
+            i++;
+        }
+    }
+
 }
 
-function createLineGeometry(linesData) {
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position',
-        new THREE.BufferAttribute( linesData.positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    geometry.setAttribute('color',
-        new THREE.BufferAttribute( linesData.colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    //geometry.computeBoundingSphere();
-    geometry.setDrawRange( 0, 0 );
-    return geometry;
+function findControlPoint(pt1, pt2, arcHeight) {
+    const midPt = pt1.midPoint(pt2);
+    const magnitude = midPt.getMagnitude();
+
+    const r = (magnitude + arcHeight) / magnitude;
+    return { x: midPt.x * r, y: midPt.y * r, z: midPt.z * r };
 }
+

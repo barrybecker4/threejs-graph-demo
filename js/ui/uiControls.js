@@ -35,6 +35,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
       const globeFolder = gui.addFolder('Globe');
       globeFolder.add(sceneParams, 'globeRadius', 0, 800, 10);
       globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
+      globeFolder.add(sceneParams, 'arcHeight', 1, 200, 1);
       globeFolder.add(sceneParams, 'showGlobe').onChange(onShowGlobeChange);
       globeFolder.open();
    }

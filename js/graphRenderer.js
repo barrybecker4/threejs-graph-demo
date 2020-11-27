@@ -8,7 +8,7 @@ import SceneParameters from './ui/SceneParameters.js';
 
 export default function(maxParticleCount) {
 
-    const sceneParams = new SceneParameters();
+    const sceneParams = new SceneParameters(maxParticleCount);
 
     const onShowPointsChange = value => group.showPointCloud(value);
     const onShowLinesChange = value => group.showLineMesh(value);

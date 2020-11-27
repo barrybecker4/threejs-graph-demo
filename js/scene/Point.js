@@ -12,6 +12,10 @@ export default class Point {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
+    add(pt) {
+        return new Point(this.x + pt.x, this.y + pt.y, this.z + pt.z);
+    }
+
     /**
      * Adjust point position by globeRadius and atmosphereThickness.
      * First find unit vector and magnitude.
@@ -29,6 +33,10 @@ export default class Point {
         const dy = this.y - pt.y;
         const dz = this.z - pt.z;
         return Math.sqrt( dx * dx + dy * dy + dz * dz );
+    }
+
+    midPoint(pt) {
+        return new Point((this.x + pt.x) / 2.0, (this.y + pt.y) / 2.0, (this.z + pt.z) / 2.0);
     }
 
 }

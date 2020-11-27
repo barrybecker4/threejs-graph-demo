@@ -36,7 +36,7 @@ function createLineGeometry(linesData) {
         new THREE.BufferAttribute( linesData.positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
     geometry.setAttribute('color',
         new THREE.BufferAttribute( linesData.colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-    //geometry.computeBoundingSphere();
+    geometry.computeBoundingSphere();
     geometry.setDrawRange( 0, 0 );
     return geometry;
 }

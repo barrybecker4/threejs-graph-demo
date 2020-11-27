@@ -1,13 +1,13 @@
-
+import Point from './Point.js';
 
 export default class LinesData {
 
     constructor(maxParticleCount) {
         // this allocates a lot of memory
-        const maxLines = maxParticleCount * maxParticleCount;
+        this.maxLines = maxParticleCount * maxParticleCount;
 
-        this.positions = new Float32Array( maxLines * 3 );
-        this.colors = new Float32Array( maxLines * 3 );
+        this.positions = new Float32Array( this.maxLines * 3 );
+        this.colors = new Float32Array( this.maxLines * 3 );
     }
 
     updatePositionsAndColors(idx, pti, ptj, alpha) {
@@ -25,5 +25,10 @@ export default class LinesData {
         }
 
         return idx + 6;
+    }
+
+    getPoint(idx) {
+        const i = 3 * idx;
+        return new Point(this.positions[i], this.positions[i + 1], this.positions[i + 2]);
     }
 }

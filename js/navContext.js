@@ -18,6 +18,8 @@ const NEAR_CLIP = 1;
 const FAR_CLIP = 4000;
 
 const FOG_COLOR = '#041421';
+const FOG_NEAR = 500;
+const FOG_FAR = 4000;
 
 export default function(containerId) {
 
@@ -28,11 +30,14 @@ export default function(containerId) {
     scene.add(camera); // needed if camera has light source
     const renderer = createRenderer(container);
     const pickHelper = new PickHelper(container);
+    pickHelper.setPickLayer(1);
     const controls = createOrbitControls(camera, container);
 
     // Show performance stats (like FPS). See https://github.com/mrdoob/stats.js/
     let stats = new Stats();
-    container.appendChild( stats.dom );
+    stats.showPanel(0); // FPS
+    document.body.appendChild( stats.dom );
+    //container.appendChild( stats.dom );
 
     window.addEventListener('resize', onWindowResize, false );
     window.addEventListener('click', evt => pickHelper.calcPickedPosition(evt));
@@ -42,6 +47,7 @@ export default function(containerId) {
     my.render = function() {
         stats.update();
         pickHelper.pick(sceneRoot, camera, controls);
+
         renderer.render(scene, camera);
     }
 
@@ -83,9 +89,7 @@ function createCamera() {
 function createScene() {
     const scene = new THREE.Scene();
 
-    const near = 500;
-    const far = 3000;
-    scene.fog = new THREE.Fog(FOG_COLOR, near, far);
+    scene.fog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
     scene.background = new THREE.Color(FOG_COLOR);
 
     const light = createDirectionalLight();

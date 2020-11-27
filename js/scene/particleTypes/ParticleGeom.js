@@ -26,6 +26,8 @@ export default class ParticleGeom {
                 object.scale.x = scale;
                 object.scale.y = scale;
                 object.scale.z = scale;
+
+                object.layers.enable( 1 );
             }
         }
     }

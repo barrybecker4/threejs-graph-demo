@@ -3,14 +3,14 @@
  */
 export default class SceneParameters {
 
-    constructor() {
+    constructor(maxParticleCount) {
         this.showPoints = true;
         this.showLines = true;
         this.showGlobe = false;
         this.minDistance = 150;
         this.limitConnections = false;
         this.maxConnections = 20;
-        this.particleCount = 500;
+        this.particleCount = Math.min(500, maxParticleCount);
         this.autoRotateSpeed = 0.0;
         this.particleSpeed = 2;
         this.particleGeometry = 'Cube';
@@ -20,6 +20,7 @@ export default class SceneParameters {
         this.particleSize = 3;
         this.globeRadius = 0;
         this.atmosphereThickness = 1.0;
+        this.arcHeight = 10;
     }
 }
 

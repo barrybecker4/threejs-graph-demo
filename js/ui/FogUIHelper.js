@@ -1,3 +1,5 @@
+import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
+
 /*
  * Use this class to pass to dat.gui so when it manipulates near or far near is never > far and far is never < near.
  * Also when dat.gui manipulates color, update both the fog and background colors.
@@ -5,7 +7,10 @@
 export default class FogGUIHelper {
 
     constructor(scene) {
-        this.fog = scene.fog;
+        if (!scene.fog) {
+            console.log("Scene has no fog to modify");
+        }
+        this.fog = scene.fog || { near: 0, far: 0, color: new THREE.Color( 0, 0, 0 ) };
         this.backgroundColor = scene.background;
     }
 

@@ -1,5 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 
+const NUM_ANIM_FRAMES = 30;
+
 export default class PickHelper {
 
     constructor(container) {
@@ -39,8 +41,12 @@ export default class PickHelper {
         this.pickPosition = undefined;
     }
 
+    setPickLayer(layer) {
+        this.raycaster.layers.set( layer );
+    }
+
     navigateToSelected(camera, controls) {
-        //camera.lookAt(this.pickedObject.position); // simply oritents the camera
+        //camera.lookAt(this.pickedObject.position); // simply orients the camera
 
         //var newQuaternion = new THREE.Quaternion();
         //THREE.Quaternion.slerp(camera.quaternion, this.pickedObject.quaternion, newQuaternion, 0.07);
@@ -50,19 +56,17 @@ export default class PickHelper {
         camera.lookAt(this.pickedObject.position);
         var endQ = camera.quaternion.clone();
 
-        //Number of animation frames
-        var animFrames = 100;
-        //Pause between two consecutive animation frames
+        // Pause between two consecutive animation frames
         var deltaT = 1;
         function interpolate(acc) {
               if (acc >= 1) return;
 
               THREE.Quaternion.slerp(startQ, endQ, camera.quaternion, acc);
               setTimeout(function() {
-                  interpolate(acc + (1 / animFrames));
+                  interpolate(acc + (1 / NUM_ANIM_FRAMES));
               }, deltaT);
         }
-        interpolate(1 / animFrames);
+        interpolate(1 / NUM_ANIM_FRAMES);
 
         controls.target = this.pickedObject.position;
     }

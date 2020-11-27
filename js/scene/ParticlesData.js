@@ -7,18 +7,15 @@ export default class ParticlesData {
         const data = [];
         const positions = new Float32Array( maxParticleCount * 3 );
         const randomSpeed = () => - 1 + Math.random() * 2;
+        const randomPos = () => Math.random() * r - r / 2;
 
         // randomly positioned points
         for ( let i = 0; i < maxParticleCount; i ++ ) {
 
-            const x = Math.random() * r - r / 2;
-            const y = Math.random() * r - r / 2;
-            const z = Math.random() * r - r / 2;
-
             const ii = 3 * i;
-            positions[ ii ] = x;
-            positions[ ii + 1 ] = y;
-            positions[ ii + 2 ] = z;
+            positions[ ii ] = randomPos();
+            positions[ ii + 1 ] = randomPos();
+            positions[ ii + 2 ] = randomPos();
 
             // add it to the geometry
             data.push({
@@ -103,7 +100,7 @@ export default class ParticlesData {
                     particleDataB.numConnections++;
 
                     const alpha = 1.0 - dist / sceneParams.minDistance;
-                    idx = linesData.updatePositionsAndColors(idx, pti, ptj, alpha);;
+                    idx = linesData.updatePositionsAndColors(idx, pti, ptj, alpha);
 
                     numConnected++;
                 }

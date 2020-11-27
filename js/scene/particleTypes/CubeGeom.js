@@ -23,24 +23,17 @@ export default class CubeGeom extends ParticleGeom {
             const object = new THREE.Mesh(geometry, CUBE_MATERIAL.clone());
 
             const pt = particlesData.getPoint(i);
-            object.position.x = pt.x;
-            object.position.y = pt.y;
-            object.position.z = pt.z;
+            object.position.set(pt.x, pt.y, pt.z);
             object.visible = i < sceneParams.particleCount;
 
-            object.rotation.x = Math.random() * 2 * Math.PI;
-            object.rotation.y = Math.random() * 2 * Math.PI;
-            object.rotation.z = Math.random() * 2 * Math.PI;
-
-            object.scale.x = 1;
-            object.scale.y = 1;
-            object.scale.z = 1;
+            object.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+            object.scale.set(1, 1, 1);
 
             pointCloud.add( object );
         }
 
         this.pointCloud = pointCloud;
-        return this.pointCloud;
+        return pointCloud;
     }
 
 }
