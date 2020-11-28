@@ -29,7 +29,6 @@ export default class PickHelper {
         if (intersectedObjects.length) {
             // pick the first object. It's the closest one
             this.pickedObject = intersectedObjects[0].object;
-            // save its color
 
             const material = this.pickedObject.material;
             this.pickedObjectSavedColor = material.color.getHex();

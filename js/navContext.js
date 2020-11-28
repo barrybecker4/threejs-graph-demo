@@ -86,9 +86,9 @@ function createCamera() {
     camera.position.z = 1750;
 
     const color = 0xFFFFFF;
-    const intensity = 0.3;
+    const intensity = 0.2;
     const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(1, -2, -4);
+    light.position.set(10, -20, -40);
     light.target.position.set(0, 0, 0);
     camera.add(light);
 
@@ -101,7 +101,7 @@ function createScene() {
     scene.fog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
     scene.background = new THREE.Color(FOG_COLOR);
 
-    scene.add(new THREE.AmbientLight(0xffffff, .2));
+    scene.add(new THREE.AmbientLight(0xffffff, .1));
     scene.add(createDirectionalLight(-1000, 2000, 4000));
 
     return scene;
@@ -109,7 +109,7 @@ function createScene() {
 
 function createDirectionalLight(xpos, ypos, zpos) {
     const color = 0xFFFFFF;
-    const intensity = 0.8;
+    const intensity = 0.9;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(xpos, ypos, zpos);
     light.target.position.set(0, 0, 0);

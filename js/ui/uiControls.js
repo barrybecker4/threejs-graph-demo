@@ -42,7 +42,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
 
    function createSceneUI(gui) {
        const sceneFolder = gui.addFolder('Scene');
-       sceneFolder.add(sceneParams, 'autoRotateSpeed', 0, 20, 0.1);
+       sceneFolder.add(sceneParams, 'autoRotateSpeed', 0, 5, 0.01);
 
        //const fog = scene.fog;
        if (fogHelper) {
