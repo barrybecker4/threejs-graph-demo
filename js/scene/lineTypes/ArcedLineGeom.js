@@ -9,8 +9,6 @@ const LINE_MATERIAL = new THREE.LineBasicMaterial( {
     transparent: true,
     opacity: 0.99,
     side: THREE.DoubleSide,
-    //emissive: 0xff8800,
-    //emissiveIntensity: 0.9,
 });
 
 // Number of line segments in the arc
@@ -51,7 +49,7 @@ export default class ArcedLineGeom extends LineGeom {
     }
 
     renderLineCloud(sceneParams, linesData, numConnected) {
-        const arcHeight = sceneParams.arcHeight;
+        const arcScale = sceneParams.arcScale;
         //console.log("numConnected = " + numConnected);
 
         // there are numConnected arcs - each connecting 2 points
@@ -60,7 +58,7 @@ export default class ArcedLineGeom extends LineGeom {
 
             const pt1 = linesData.getPoint(2 * i);
             const pt2 = linesData.getPoint(2 * i + 1);
-            const controlPt = findControlPoint(pt1, pt2, arcHeight);
+            const controlPt = findControlPoint(pt1, pt2, arcScale);
 
             const curve = arc.curve;
             curve.v0.set(pt1.x, pt1.y, pt1.z);
@@ -96,11 +94,13 @@ export default class ArcedLineGeom extends LineGeom {
 
 }
 
-function findControlPoint(pt1, pt2, arcHeight) {
+// Height of control point determined by arcScale and distance between end points.
+function findControlPoint(pt1, pt2, arcScale) {
+    const distance = pt1.distanceTo(pt2);
     const midPt = pt1.midPoint(pt2);
     const magnitude = midPt.getMagnitude();
 
-    const r = (magnitude + arcHeight) / magnitude;
+    const r = (magnitude + distance * arcScale) / magnitude;
     return { x: midPt.x * r, y: midPt.y * r, z: midPt.z * r };
 }
 

@@ -113,6 +113,7 @@ function createBoxHelper(r) {
     return helper;
 }
 
+// See https://github.com/turban/webgl-earth
 function createGlobe() {
 
     // Earth params
@@ -130,13 +131,9 @@ function createGlobe() {
     clouds.rotation.y = rotation;
     globeGroup.add(clouds)
 
-    var stars = createStars(90, 64);
-    globeGroup.add(stars);
+    //var stars = createStars(90, 64);
+    //globeGroup.add(stars);
 
-    //var controls = new THREE.TrackballControls(camera);
-    //webglEl.appendChild(renderer.domElement);
-
-    //render();
     globeGroup.render = function(sceneParams) {
         const r = sceneParams.globeRadius;
         sphere.scale.set(r, r, r);
@@ -144,14 +141,6 @@ function createGlobe() {
 
     return globeGroup;
 
-    /*
-    function render() {
-        controls.update();
-        sphere.rotation.y += 0.0005;
-        clouds.rotation.y += 0.0005;        
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-    }*/
 
     function createSphere(radius, segments) {
         return new THREE.Mesh(

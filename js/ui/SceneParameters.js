@@ -20,7 +20,7 @@ export default class SceneParameters {
         this.particleSize = 3;
         this.globeRadius = 0;
         this.atmosphereThickness = 1.0;
-        this.arcHeight = 10;
+        this.arcScale = 0.1;
     }
 }
 
