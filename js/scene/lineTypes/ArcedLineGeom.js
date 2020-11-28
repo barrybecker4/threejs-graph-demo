@@ -7,7 +7,7 @@ const LINE_MATERIAL = new THREE.LineBasicMaterial( {
     vertexColors: false, //true,
     blending: THREE.AdditiveBlending,
     transparent: true,
-    opacity: 0.99,
+    opacity: 0.5,
     side: THREE.DoubleSide,
 });
 
@@ -50,7 +50,7 @@ export default class ArcedLineGeom extends LineGeom {
 
     renderLineCloud(sceneParams, linesData, numConnected) {
         const arcScale = sceneParams.arcScale;
-        //console.log("numConnected = " + numConnected);
+        LINE_MATERIAL.opacity = sceneParams.lineOpacity;
 
         // there are numConnected arcs - each connecting 2 points
         for (let i = 0; i < numConnected; i++) {
@@ -70,13 +70,9 @@ export default class ArcedLineGeom extends LineGeom {
 
             arc.geometry.setFromPoints(curve.getPoints(NUM_SEGMENTS));
             arc.geometry.verticesNeedUpdate;
-            //const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(NUM_SEGMENTS));
-            //arc.geometry.dispose();
-            //arc.geometry = geometry;
 
             arc.visible = true;
         }
-        //this.lineCloud.verticesNeedUpdate = true;
 
         this.hideRemainingLines(linesData, numConnected);
     }

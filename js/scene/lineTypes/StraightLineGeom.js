@@ -7,6 +7,7 @@ const LINE_MATERIAL = new THREE.LineBasicMaterial( {
     vertexColors: true,
     blending: THREE.AdditiveBlending,
     transparent: true,
+    opacity: 0.9,
 });
 
 
@@ -22,7 +23,7 @@ export default class StraightLineGeom extends LineGeom {
 
     renderLineCloud(sceneParams, particlesData, numConnected) {
         // was passing numConnected
-        //const numConnected = sceneParams.particleCount * sceneParams.particleCount * 2;
+        LINE_MATERIAL.opacity = sceneParams.lineOpacity;
         const geom = this.lineCloud.geometry;
         geom.setDrawRange(0, numConnected * 2);
         geom.attributes.position.needsUpdate = true;

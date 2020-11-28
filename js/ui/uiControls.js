@@ -26,6 +26,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        connectionsFolder.add(sceneParams, 'minDistance', 10, 300);
        connectionsFolder.add(sceneParams, 'limitConnections');
        connectionsFolder.add(sceneParams, 'maxConnections', 0, 30, 1);
+       connectionsFolder.add(sceneParams, 'lineOpacity', 0.2, 1.0, 0.1);
        connectionsFolder.add(sceneParams, 'lineGeometry', [ 'Line', 'Arc' ]);
        connectionsFolder.add(sceneParams, 'showLines').onChange(onShowLinesChange);
        connectionsFolder.open();
@@ -35,7 +36,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
       const globeFolder = gui.addFolder('Globe');
       globeFolder.add(sceneParams, 'globeRadius', 0, 800, 10);
       globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
-      globeFolder.add(sceneParams, 'arcScale', 0.01, 2, 0.01);
+      globeFolder.add(sceneParams, 'arcScale', 0.02, 2, 0.01);
       globeFolder.add(sceneParams, 'showGlobe').onChange(onShowGlobeChange);
       globeFolder.open();
    }

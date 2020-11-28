@@ -10,6 +10,7 @@ export default class SceneParameters {
         this.minDistance = 150;
         this.limitConnections = false;
         this.maxConnections = 20;
+        this.lineOpacity = 0.9;
         this.particleCount = Math.min(500, maxParticleCount);
         this.autoRotateSpeed = 0.0;
         this.particleSpeed = 2;
