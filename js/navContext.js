@@ -24,7 +24,7 @@ const FOG_FAR = 4000;
 export default function(containerId) {
 
     const container = document.getElementById(containerId);
-    const camera = createCamera()
+    const camera = createCamera();
     const scene = createScene();
     let sceneRoot = null;
     scene.add(camera); // needed if camera has light source
@@ -32,15 +32,25 @@ export default function(containerId) {
     const pickHelper = new PickHelper(container);
     pickHelper.setPickLayer(1);
     const controls = createOrbitControls(camera, container);
+    let oldMousePosition = null;
 
     // Show performance stats (like FPS). See https://github.com/mrdoob/stats.js/
     let stats = new Stats();
     stats.showPanel(0); // FPS
     document.body.appendChild( stats.dom );
-    //container.appendChild( stats.dom );
 
     window.addEventListener('resize', onWindowResize, false );
-    window.addEventListener('click', evt => pickHelper.calcPickedPosition(evt));
+
+    // Need to use pointerup/down because OrbitControls call preventDefault on mouseup/down.
+    window.addEventListener('pointerdown', evt => {
+        console.log(JSON.stringify(oldMousePosition));
+        oldMousePosition = { x: evt.clientX, y: evt.clientY };
+    });
+    window.addEventListener('pointerup', evt => {
+        if (evt.clientX === oldMousePosition.x && evt.clientY === oldMousePosition.y) {
+            pickHelper.pickedPosition(evt);
+        }
+    });
 
     const my = {};
 
@@ -94,7 +104,6 @@ function createScene() {
 
     scene.add(new THREE.AmbientLight(0xffffff, .2));
     scene.add(createDirectionalLight(-1000, 2000, 4000));
-    //scene.add(createDirectionalLight(1000, -2000, -3000));
 
     return scene;
 }

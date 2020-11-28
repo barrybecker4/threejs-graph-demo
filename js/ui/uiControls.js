@@ -2,7 +2,7 @@ import { GUI } from '../libs/dat.gui.module.js';
 import FogGUIHelper from './FogUIHelper.js';
 
 export default function(maxParticleCount, fogHelper, sceneParams,
-                        onShowPointsChange, onShowLinesChange, onShowGlobeChange) {
+                        onShowPointsChange, onShowLinesChange) {
 
    const gui = new GUI();
 
@@ -37,7 +37,6 @@ export default function(maxParticleCount, fogHelper, sceneParams,
       globeFolder.add(sceneParams, 'globeRadius', 0, 800, 10);
       globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
       globeFolder.add(sceneParams, 'arcScale', 0.02, 2, 0.01);
-      globeFolder.add(sceneParams, 'showGlobe').onChange(onShowGlobeChange);
       globeFolder.open();
    }
 
@@ -46,12 +45,13 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        sceneFolder.add(sceneParams, 'autoRotateSpeed', 0, 20, 0.1);
 
        //const fog = scene.fog;
-       const fogNear = fogHelper.fogNear;
-       const fogFar = fogHelper.fogFar;
-       sceneFolder.add(fogHelper, 'fogNear', fogNear, fogFar).listen();
-       sceneFolder.add(fogHelper, 'fogFar', fogNear, fogFar).listen();
-       sceneFolder.addColor(fogHelper, 'color');
-
+       if (fogHelper) {
+          const fogNear = fogHelper.fogNear;
+          const fogFar = fogHelper.fogFar;
+          sceneFolder.add(fogHelper, 'fogNear', fogNear, fogFar).listen();
+          sceneFolder.add(fogHelper, 'fogFar', fogNear, fogFar).listen();
+          sceneFolder.addColor(fogHelper, 'color');
+       }
        sceneFolder.open();
    }
 };

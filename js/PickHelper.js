@@ -1,6 +1,6 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 
-const NUM_ANIM_FRAMES = 30;
+const NUM_ANIM_FRAMES = 20;
 
 export default class PickHelper {
 
@@ -34,9 +34,12 @@ export default class PickHelper {
             const material = this.pickedObject.material;
             this.pickedObjectSavedColor = material.color.getHex();
 
-            this.navigateToSelected(camera, controls);
+            this.navigateToSelected(this.pickedObject.position, camera, controls);
 
             material.color.setHex(0xFFFF77);
+        }
+        else {
+            this.navigateToSelected(new THREE.Vector3( 0, 0, 0 ), camera, controls);
         }
         this.pickPosition = undefined;
     }
@@ -45,15 +48,10 @@ export default class PickHelper {
         this.raycaster.layers.set( layer );
     }
 
-    navigateToSelected(camera, controls) {
-        //camera.lookAt(this.pickedObject.position); // simply orients the camera
-
-        //var newQuaternion = new THREE.Quaternion();
-        //THREE.Quaternion.slerp(camera.quaternion, this.pickedObject.quaternion, newQuaternion, 0.07);
-        //camera.quaternion = newQuaternion;
+    navigateToSelected(position, camera, controls) {
 
         var startQ = camera.quaternion.clone();
-        camera.lookAt(this.pickedObject.position);
+        camera.lookAt(position);
         var endQ = camera.quaternion.clone();
 
         // Pause between two consecutive animation frames
@@ -68,7 +66,7 @@ export default class PickHelper {
         }
         interpolate(1 / NUM_ANIM_FRAMES);
 
-        controls.target = this.pickedObject.position;
+        controls.target = position;
     }
 
     static getCanvasRelativePosition(event, container) {
@@ -79,7 +77,7 @@ export default class PickHelper {
         };
     }
 
-    calcPickedPosition(event) {
+    pickedPosition(event) {
         const pos = PickHelper.getCanvasRelativePosition(event, this.container);
         this.pickPosition = {
             x: (pos.x / this.container.width ) *  2 - 1,

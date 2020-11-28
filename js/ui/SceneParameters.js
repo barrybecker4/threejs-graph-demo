@@ -6,7 +6,6 @@ export default class SceneParameters {
     constructor(maxParticleCount) {
         this.showPoints = true;
         this.showLines = true;
-        this.showGlobe = false;
         this.minDistance = 150;
         this.limitConnections = false;
         this.maxConnections = 20;
