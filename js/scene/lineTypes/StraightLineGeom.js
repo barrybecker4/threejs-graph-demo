@@ -3,7 +3,7 @@ import LineGeom from './LineGeom.js';
 
 const LINE_MATERIAL = new THREE.LineBasicMaterial( {
     color: 0xAB3BBB,
-    linewidth: 2,
+    linewidth: 2, // has no effect
     vertexColors: true,
     blending: THREE.AdditiveBlending,
     transparent: true,

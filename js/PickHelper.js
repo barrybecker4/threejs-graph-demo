@@ -10,6 +10,19 @@ export default class PickHelper {
         this.pickedObject = null;
         this.pickedObjectSavedColor = null;
         this.pickPosition = null;
+        this.oldMousePosition = null;
+
+
+
+        // Need to use pointerup/down because OrbitControls call preventDefault on mouseup/down.
+        window.addEventListener('pointerdown', evt => {
+            this.oldMousePosition = { x: evt.clientX, y: evt.clientY };
+        });
+        window.addEventListener('pointerup', evt => {
+            if (evt.clientX === this.oldMousePosition.x && evt.clientY === this.oldMousePosition.y) {
+                this.pickedPosition(evt);
+            }
+        });
     }
 
     pick(sceneRoot, camera, controls) {

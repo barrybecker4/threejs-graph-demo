@@ -11,8 +11,8 @@ const SPHERE_MATERIAL = new THREE.MeshPhongMaterial({
     bumpMap:     THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
     bumpScale:   BUMP_SCALE,
     specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
-    specular:    0xffffff, //aaaaaa, //new THREE.Color('grey')
-    shininess: 1,
+    specular:    0xffffff,
+    shininess:   1,
 });
 
 const CLOUD_MATERIAL = new THREE.MeshPhongMaterial({
@@ -46,7 +46,7 @@ export default function() {
     //globeGroup.add(stars);
 
     globeGroup.render = function(sceneParams) {
-        const r = sceneParams.globeRadius;
+        const r = sceneParams.globeRadius * 0.99;
         sphere.scale.set(r, r, r);
         clouds.scale.set(r, r, r);
         SPHERE_MATERIAL.bumpScale = r * BUMP_SCALE;

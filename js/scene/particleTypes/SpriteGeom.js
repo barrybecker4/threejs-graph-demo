@@ -14,7 +14,6 @@ export default class CubeGeom extends ParticleGeom {
         for (let i = 0; i < particlesData.data.length; i ++) {
 
             const object = new THREE.Sprite(SPRITE_MATERIAL.clone());
-            object.scale.set(2, 2, 1);
 
             const pt = particlesData.getPoint(i);
             object.position.set(pt.x, pt.y, pt.z);

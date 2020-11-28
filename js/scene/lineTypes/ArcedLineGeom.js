@@ -2,9 +2,9 @@ import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import LineGeom from './LineGeom.js';
 
 const LINE_MATERIAL = new THREE.LineBasicMaterial( {
-    color: 0xFF3BFF, //0xAB3BBB,
+    color: 0xFF3BFF,
     linewidth: 2,
-    vertexColors: false, //true,
+    vertexColors: false,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.5,
@@ -21,16 +21,12 @@ export default class ArcedLineGeom extends LineGeom {
         const lineCloud = new THREE.Group();
         this.arcs = [];
 
-        function rand() {
-            return 1; //Math.random() * 80 - 40;
-        }
-
         for ( let i = 0; i < linesData.maxLines; i++ ) {
 
             const curve = new THREE.QuadraticBezierCurve3(
-                new THREE.Vector3( rand(), rand(), rand() ),
-                new THREE.Vector3( rand(), rand(), rand() ),
-                new THREE.Vector3( rand(), rand(), rand() )
+                new THREE.Vector3( 1, 1, 1 ),
+                new THREE.Vector3( 1, 1, 1  ),
+                new THREE.Vector3( 1, 1, 1  )
             );
 
             const points = curve.getPoints( NUM_SEGMENTS );
