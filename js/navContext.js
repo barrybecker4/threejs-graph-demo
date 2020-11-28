@@ -43,7 +43,6 @@ export default function(containerId) {
 
     // Need to use pointerup/down because OrbitControls call preventDefault on mouseup/down.
     window.addEventListener('pointerdown', evt => {
-        console.log(JSON.stringify(oldMousePosition));
         oldMousePosition = { x: evt.clientX, y: evt.clientY };
     });
     window.addEventListener('pointerup', evt => {
