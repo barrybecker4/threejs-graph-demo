@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
+import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
 import ParticleGeom from './ParticleGeom.js';
 
 const POINT_MATERIAL = new THREE.PointsMaterial({

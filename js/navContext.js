@@ -1,6 +1,6 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.122.0/examples/jsm/controls/OrbitControls.js';
-import { VRButton } from 'https://unpkg.com/three@0.122.0/examples/jsm/webxr/VRButton.js';
+import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.123.0/examples/jsm/controls/OrbitControls.js';
+import { VRButton } from 'https://unpkg.com/three@0.123.0/examples/jsm/webxr/VRButton.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
 import PickHelper from './PickHelper.js';
 
@@ -49,8 +49,25 @@ export default function(containerId) {
         renderer.xr.enabled = true;
     }
 
-
     window.addEventListener('resize', onWindowResize, false );
+
+/*
+    console.log("cookiesEnabled is " + navigator.cookieEnabled);
+    console.log("navigator.appName is " + navigator.appName);
+
+    const xrSession = window.navigator.xr.requestSession('immersive-vr', {
+        // 3DoF
+        requiredFeatures: ['local-floor'],
+        // 6 DoF
+        optionalFeatures: ['bounded-floor']
+    });
+
+    let inputSources = xrSession.getInputSources();
+    for (let inputSource of inputSources) {
+        let inputPose = xrFrame.getInputPose(inputSource, this._referenceSpace);
+        console.log("inputSrc: " + JSON.stringify(inputSource) + "\npose: " + JSON.stringify(inputPos));
+    }*/
+
 
     const my = {};
 
@@ -59,9 +76,9 @@ export default function(containerId) {
         pickHelper.pick(sceneRoot, camera, controls);
 
         if (ENABLE_VR) {
-            renderer.setAnimationLoop( function () {
-                renderer.render( scene, camera );
-            } );
+            renderer.setAnimationLoop(function () {
+                renderer.render(scene, camera);
+            });
         } else {
             renderer.render(scene, camera);
         }

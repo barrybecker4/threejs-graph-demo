@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
+import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
 
 const NUM_ANIM_FRAMES = 10;
 

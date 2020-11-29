@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
+import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
 
 /*
  * Use this class to pass to dat.gui so when it manipulates near or far near is never > far and far is never < near.
