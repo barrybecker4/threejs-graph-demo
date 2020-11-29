@@ -16,11 +16,9 @@ export default function(maxParticleCount) {
     const context = navContext('container');
     const fogHelper = new FogGUIHelper(context.getScene());
 
-    const controls =
-        uiControls(maxParticleCount, fogHelper, sceneParams,
-                   onShowPointsChange, onShowLinesChange);
+    const controls = uiControls(fogHelper, sceneParams, onShowPointsChange, onShowLinesChange);
 
-    const group = sceneGraph(maxParticleCount, sceneParams);
+    const group = sceneGraph(sceneParams);
     context.setSceneRoot(group);
 
     animate();

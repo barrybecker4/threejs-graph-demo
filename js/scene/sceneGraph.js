@@ -24,10 +24,10 @@ const LINE_TYPE_TO_CONSTRUCTOR = {
     Arc: ArcedLineGeom,
 }
 
-export default function(maxParticleCount, sceneParams) {
+export default function(sceneParams) {
 
-    const particlesData = new ParticlesData(maxParticleCount, R);
-    const linesData = new LinesData(maxParticleCount);
+    const particlesData = new ParticlesData(sceneParams.maxParticleCount, R);
+    const linesData = new LinesData(sceneParams.maxParticleCount);
 
     const group = new THREE.Group();
     group.add(createBoxHelper(R));

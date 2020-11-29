@@ -1,8 +1,7 @@
 import { GUI } from '../libs/dat.gui.module.js';
 import FogGUIHelper from './FogUIHelper.js';
 
-export default function(maxParticleCount, fogHelper, sceneParams,
-                        onShowPointsChange, onShowLinesChange) {
+export default function(fogHelper, sceneParams, onShowPointsChange, onShowLinesChange) {
 
    const gui = new GUI();
 
@@ -13,7 +12,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
 
    function createParticlesUI(gui) {
        const particleFolder = gui.addFolder('Particles');
-       particleFolder.add(sceneParams, 'particleCount', 0, maxParticleCount, 1)
+       particleFolder.add(sceneParams, 'particleCount', 0, sceneParams.maxParticleCount, 1)
        particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
        particleFolder.add(sceneParams, 'particleSize', 1.0, 40, 1);
        particleFolder.add(sceneParams, 'showPoints').onChange(onShowPointsChange);
