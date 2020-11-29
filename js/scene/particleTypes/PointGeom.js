@@ -3,7 +3,7 @@ import ParticleGeom from './ParticleGeom.js';
 
 const POINT_MATERIAL = new THREE.PointsMaterial({
     color: 0xBF6FFF,
-    size: 8,
+    size: 4,
     blending: THREE.AdditiveBlending,
     transparent: true,
     sizeAttenuation: true, // points in distance are smaller
@@ -21,7 +21,7 @@ export default class PointGeom extends ParticleGeom {
     }
 
     renderPointCloud(sceneParams, particlesData) {
-        POINT_MATERIAL.size = 3 * sceneParams.particleSize;
+        POINT_MATERIAL.size = sceneParams.particleSize;
         this.points.setDrawRange(0, sceneParams.particleCount);
         this.pointCloud.geometry.attributes.position.needsUpdate = true;
     }

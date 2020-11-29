@@ -1,8 +1,11 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.122.0/examples/jsm/controls/OrbitControls.js';
+import { VRButton } from 'https://unpkg.com/three@0.122.0/examples/jsm/webxr/VRButton.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
 import PickHelper from './PickHelper.js';
 
+
+const ENABLE_VR = true;
 
 // Field of View. Camera frustum vertical field, from bottom to top of view, in degrees.
 // The larger this is the more extreme is perspective distortion.
@@ -29,6 +32,7 @@ export default function(containerId) {
     let sceneRoot = null;
     scene.add(camera); // needed if camera has light source
     const renderer = createRenderer(container);
+
     const pickHelper = new PickHelper(container);
     pickHelper.setPickLayer(1);
     const controls = createOrbitControls(camera, container);
@@ -39,6 +43,13 @@ export default function(containerId) {
     stats.showPanel(0); // FPS
     document.body.appendChild( stats.dom );
 
+    // Add VR Button if enabled
+    if (ENABLE_VR) {
+        document.body.appendChild( VRButton.createButton( renderer ) );
+        renderer.xr.enabled = true;
+    }
+
+
     window.addEventListener('resize', onWindowResize, false );
 
     const my = {};
@@ -47,7 +58,13 @@ export default function(containerId) {
         stats.update();
         pickHelper.pick(sceneRoot, camera, controls);
 
-        renderer.render(scene, camera);
+        if (ENABLE_VR) {
+            renderer.setAnimationLoop( function () {
+                renderer.render( scene, camera );
+            } );
+        } else {
+            renderer.render(scene, camera);
+        }
     }
 
     my.setSceneRoot = function(newSceneRoot) {

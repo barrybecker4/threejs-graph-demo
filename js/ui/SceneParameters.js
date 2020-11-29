@@ -17,7 +17,7 @@ export default class SceneParameters {
         this.lineGeometry = 'Line';
         this.oldParticleGeometry = null;
         this.oldLineGeometry = null;
-        this.particleSize = 3;
+        this.particleSize = 6;
         this.globeRadius = 0;
         this.atmosphereThickness = 1.0;
         this.arcScale = 0.1;

@@ -15,7 +15,7 @@ export default function(maxParticleCount, fogHelper, sceneParams,
        const particleFolder = gui.addFolder('Particles');
        particleFolder.add(sceneParams, 'particleCount', 0, maxParticleCount, 1)
        particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
-       particleFolder.add(sceneParams, 'particleSize', 0.5, 40, 0.1);
+       particleFolder.add(sceneParams, 'particleSize', 1.0, 40, 1);
        particleFolder.add(sceneParams, 'showPoints').onChange(onShowPointsChange);
        particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ]);
        particleFolder.open();
