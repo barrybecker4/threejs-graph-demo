@@ -3,19 +3,10 @@ import { OrbitControls } from 'https://unpkg.com/three@0.123.0/examples/jsm/cont
 import { VRButton } from 'https://unpkg.com/three@0.123.0/examples/jsm/webxr/VRButton.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
 import PickHelper from './PickHelper.js';
+import createCamera from './createCamera.js';
 
 
 const ENABLE_VR = true;
-
-// Field of View. Camera frustum vertical field, from bottom to top of view, in degrees.
-// The larger this is the more extreme is perspective distortion.
-const FOV = 30;
-
-// Camera frustum aspect ratio. Usually the canvas width / canvas height.
-const ASPECT_RATIO = window.innerWidth / window.innerHeight;
-
-// Camera frustum near clipping plane.
-const NEAR_CLIP = 1;
 
 // Camera frustum far clipping plane.
 const FAR_CLIP = 4000;
@@ -24,7 +15,7 @@ const FOG_COLOR = '#041421';
 const FOG_NEAR = 500;
 const FOG_FAR = 4000;
 
-export default function(containerId) {
+export default async function(containerId) {
 
     const container = document.getElementById(containerId);
     const camera = createCamera();
@@ -51,23 +42,21 @@ export default function(containerId) {
 
     window.addEventListener('resize', onWindowResize, false );
 
-/*
-    console.log("cookiesEnabled is " + navigator.cookieEnabled);
-    console.log("navigator.appName is " + navigator.appName);
-
-    const xrSession = window.navigator.xr.requestSession('immersive-vr', {
+    /* Gives error:
+       'requestSession' on 'XRSystem': The requested session requires user activation
+    const xrSession = await navigator.xr.requestSession('immersive-vr', {
         // 3DoF
         requiredFeatures: ['local-floor'],
         // 6 DoF
         optionalFeatures: ['bounded-floor']
     });
+    console.log("xrSession: " + xrSession);
 
     let inputSources = xrSession.getInputSources();
     for (let inputSource of inputSources) {
         let inputPose = xrFrame.getInputPose(inputSource, this._referenceSpace);
         console.log("inputSrc: " + JSON.stringify(inputSource) + "\npose: " + JSON.stringify(inputPos));
     }*/
-
 
     const my = {};
 
@@ -104,20 +93,6 @@ export default function(containerId) {
 
     return my;
 };
-
-function createCamera() {
-    const camera = new THREE.PerspectiveCamera(FOV, ASPECT_RATIO, NEAR_CLIP, FAR_CLIP);
-    camera.position.z = 1750;
-
-    const color = 0xFFFFFF;
-    const intensity = 0.2;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(10, -20, -40);
-    light.target.position.set(0, 0, 0);
-    camera.add(light);
-
-    return camera;
-}
 
 function createScene() {
     const scene = new THREE.Scene();
