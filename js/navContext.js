@@ -4,16 +4,13 @@ import { VRButton } from 'https://unpkg.com/three@0.123.0/examples/jsm/webxr/VRB
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.js';
 import PickHelper from './PickHelper.js';
 import createCamera from './createCamera.js';
-
+import createScene from './createScene.js';
 
 const ENABLE_VR = true;
 
 // Camera frustum far clipping plane.
 const FAR_CLIP = 4000;
 
-const FOG_COLOR = '#041421';
-const FOG_NEAR = 500;
-const FOG_FAR = 4000;
 
 export default async function(containerId) {
 
@@ -28,16 +25,10 @@ export default async function(containerId) {
     pickHelper.setPickLayer(1);
     const controls = createOrbitControls(camera, container);
 
+    const stats = addPerformanceStatistics();
 
-    // Show performance stats (like FPS). See https://github.com/mrdoob/stats.js/
-    let stats = new Stats();
-    stats.showPanel(0); // FPS
-    document.body.appendChild( stats.dom );
-
-    // Add VR Button if enabled
     if (ENABLE_VR) {
-        document.body.appendChild( VRButton.createButton( renderer ) );
-        renderer.xr.enabled = true;
+        addVRButton(renderer);
     }
 
     window.addEventListener('resize', onWindowResize, false );
@@ -94,25 +85,18 @@ export default async function(containerId) {
     return my;
 };
 
-function createScene() {
-    const scene = new THREE.Scene();
-
-    scene.fog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
-    scene.background = new THREE.Color(FOG_COLOR);
-
-    scene.add(new THREE.AmbientLight(0xffffff, .1));
-    scene.add(createDirectionalLight(-1000, 2000, 4000));
-
-    return scene;
+// Show performance stats (like FPS). See https://github.com/mrdoob/stats.js/
+function addPerformanceStatistics() {
+    const stats = new Stats();
+    stats.showPanel(0); // FPS
+    document.body.appendChild( stats.dom );
+    return stats;
 }
 
-function createDirectionalLight(xpos, ypos, zpos) {
-    const color = 0xFFFFFF;
-    const intensity = 0.9;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(xpos, ypos, zpos);
-    light.target.position.set(0, 0, 0);
-    return light;
+// Add VR Button if enabled
+function addVRButton(renderer) {
+    document.body.appendChild( VRButton.createButton( renderer ) );
+    renderer.xr.enabled = true;
 }
 
 function createOrbitControls(camera, container) {
