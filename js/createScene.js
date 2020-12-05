@@ -20,7 +20,7 @@ export default function() {
 
 function createDirectionalLight(xpos, ypos, zpos) {
     const color = 0xFFFFFF;
-    const intensity = 0.9;
+    const intensity = 0.7;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(xpos, ypos, zpos);
     light.target.position.set(0, 0, 0);

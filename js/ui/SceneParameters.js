@@ -15,15 +15,15 @@ export default class SceneParameters {
         this.lineOpacity = 0.9;
         this.particleCount = Math.min(500, maxParticleCount);
         this.autoRotateSpeed = 0.0;
-        this.particleSpeed = 2;
-        this.particleGeometry = 'Cube';
+        this.particleSpeed = 4;
+        this.particleGeometry = 'Sprite';
         this.lineGeometry = 'Line';
         this.oldParticleGeometry = null;
         this.oldLineGeometry = null;
         this.particleSize = 6;
-        this.globeRadius = 0;
-        this.atmosphereThickness = 1.0;
-        this.arcScale = 0.1;
+        this.globeRadius = 400;
+        this.atmosphereThickness = 0.04;
+        this.arcScale = 0.2;
     }
 }
 
