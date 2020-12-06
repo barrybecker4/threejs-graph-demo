@@ -9,7 +9,7 @@ import createScene from './createScene.js';
 const ENABLE_VR = true;
 
 // Camera frustum far clipping plane.
-const FAR_CLIP = 4000;
+const FAR_CLIP = 40;
 
 
 export default async function(containerId, sceneZ) {
@@ -101,8 +101,8 @@ function addVRButton(renderer) {
 
 function createOrbitControls(camera, container, sceneZ) {
     const controls = new OrbitControls(camera, container);
-    controls.minDistance = 500;
-    controls.maxDistance = FAR_CLIP - 500;
+    controls.minDistance = 5;
+    controls.maxDistance = FAR_CLIP - 5;
     controls.target.set(0, 0, sceneZ);
 
     return controls;

@@ -3,13 +3,13 @@ import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
 
 // Field of View. Camera frustum vertical field, from bottom to top of view, in degrees.
 // The larger this is the more extreme is perspective distortion.
-const FOV = 30;
+const FOV = 60;
 
 // Camera frustum aspect ratio. Usually the canvas width / canvas height.
 const ASPECT_RATIO = window.innerWidth / window.innerHeight;
 
 // Camera frustum near clipping plane.
-const NEAR_CLIP = 1;
+const NEAR_CLIP = 0.1;
 
 
 const Z_POSITION = 0; //1750;

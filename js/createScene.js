@@ -1,8 +1,8 @@
 import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
 
 const FOG_COLOR = '#041421';
-const FOG_NEAR = 500;
-const FOG_FAR = 4000;
+const FOG_NEAR = 5;
+const FOG_FAR = 40;
 
 
 export default function() {
@@ -13,7 +13,7 @@ export default function() {
     scene.background = new THREE.Color(FOG_COLOR);
 
     scene.add(new THREE.AmbientLight(0xffffff, .1));
-    scene.add(createDirectionalLight(-1000, 2000, 4000));
+    scene.add(createDirectionalLight(-10, 20, 40));
 
     return scene;
 }

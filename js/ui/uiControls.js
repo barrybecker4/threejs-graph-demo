@@ -13,8 +13,8 @@ export default function(fogHelper, sceneParams, onShowPointsChange, onShowLinesC
    function createParticlesUI(gui) {
        const particleFolder = gui.addFolder('Particles');
        particleFolder.add(sceneParams, 'particleCount', 0, sceneParams.maxParticleCount, 1)
-       particleFolder.add(sceneParams, 'particleSpeed', 0, 40, 1);
-       particleFolder.add(sceneParams, 'particleSize', 1.0, 40, 1);
+       particleFolder.add(sceneParams, 'particleSpeed', 0, 1, 0.01);
+       particleFolder.add(sceneParams, 'particleSize', 0.001, 1, .001);
        particleFolder.add(sceneParams, 'showPoints').onChange(onShowPointsChange);
        particleFolder.add(sceneParams, 'particleGeometry', [ 'Point', 'Cube', 'Sphere', 'Sprite' ]);
        particleFolder.open();
@@ -33,7 +33,7 @@ export default function(fogHelper, sceneParams, onShowPointsChange, onShowLinesC
 
    function createGlobeUI(gui) {
       const globeFolder = gui.addFolder('Globe');
-      globeFolder.add(sceneParams, 'globeRadius', 0, 800, 10);
+      globeFolder.add(sceneParams, 'globeRadius', 0, 8, 10);
       globeFolder.add(sceneParams, 'atmosphereThickness', 0, 1, 0.01);
       globeFolder.add(sceneParams, 'arcScale', 0.02, 2, 0.01);
       globeFolder.open();

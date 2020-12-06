@@ -19,7 +19,7 @@ export default class CubeGeom extends ParticleGeom {
             object.position.set(pt.x, pt.y, pt.z);
             object.visible = i < sceneParams.particleCount;
 
-            object.scale.set(1, 1, 1)
+            object.scale.set(.01, .01, .01)
 
             pointCloud.add( object );
         }

@@ -3,7 +3,7 @@ import ParticleGeom from './ParticleGeom.js';
 
 const POINT_MATERIAL = new THREE.PointsMaterial({
     color: 0xBF6FFF,
-    size: 4,
+    size: 0.5,
     blending: THREE.AdditiveBlending,
     transparent: true,
     sizeAttenuation: true, // points in distance are smaller
@@ -31,7 +31,7 @@ export default class PointGeom extends ParticleGeom {
 
 function createPointGeometry(particlesData) {
     const points = new THREE.BufferGeometry();
-    points.setDrawRange(0, 0); //particlesData.data.length);
+    points.setDrawRange(0, 0);
     const bufferedAttr = new THREE.BufferAttribute(particlesData.positions, 3).setUsage(THREE.DynamicDrawUsage);
     points.setAttribute('position', bufferedAttr);
     return points;

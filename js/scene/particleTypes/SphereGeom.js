@@ -15,7 +15,7 @@ export default class CubeGeom extends ParticleGeom {
     createPointCloud(sceneParams, particlesData) {
 
         const pointCloud = new THREE.Group();
-        const geometry = new THREE.SphereBufferGeometry( 1, 16, 16 );
+        const geometry = new THREE.SphereBufferGeometry( .5, 16, 16 );
         geometry.computeBoundingBox();
 
         for ( let i = 0; i < particlesData.data.length; i ++ ) {

@@ -10,7 +10,7 @@ import SpriteGeom from './particleTypes/SpriteGeom.js'
 import createGlobe from './createGlobe.js';
 
 // edge length of the bounding cube
-const R = 800;
+const R = 8;
 
 const POINT_TYPE_TO_CONSTRUCTOR = {
     Point : PointGeom,
