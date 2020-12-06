@@ -12,10 +12,10 @@ const ASPECT_RATIO = window.innerWidth / window.innerHeight;
 const NEAR_CLIP = 1;
 
 
-const Z_POSITION = 1750;
+const Z_POSITION = 0; //1750;
 
 
-export default function(farClip) {
+export default function(farClip, sceneZ) {
     const camera = new THREE.PerspectiveCamera(FOV, ASPECT_RATIO, NEAR_CLIP, farClip);
     camera.position.z = Z_POSITION;
 
@@ -23,7 +23,7 @@ export default function(farClip) {
     const intensity = 0.2;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(10, -20, -40);
-    light.target.position.set(0, 0, 0);
+    light.target.position.set(0, 0, sceneZ);
     camera.add(light);
 
     return camera;

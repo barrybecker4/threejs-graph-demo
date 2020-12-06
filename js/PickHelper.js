@@ -4,15 +4,14 @@ const NUM_ANIM_FRAMES = 10;
 
 export default class PickHelper {
 
-    constructor(container) {
+    constructor(container, sceneZ) {
         this.container = container;
         this.raycaster = new THREE.Raycaster();
         this.pickedObject = null;
         this.pickedObjectSavedColor = null;
         this.pickPosition = null;
         this.oldMousePosition = null;
-
-
+        this.sceneZ = sceneZ;
 
         // Need to use pointerup/down because OrbitControls call preventDefault on mouseup/down.
         window.addEventListener('pointerdown', evt => {
@@ -46,12 +45,14 @@ export default class PickHelper {
             const material = this.pickedObject.material;
             this.pickedObjectSavedColor = material.color.getHex();
 
-            this.navigateToSelected(this.pickedObject.position, camera, controls);
+            const worldPosition = new THREE.Vector3();
+            this.pickedObject.getWorldPosition(worldPosition);
+            this.navigateToSelected(worldPosition, camera, controls);
 
             material.color.setHex(0xFFFF77);
         }
         else {
-            this.navigateToSelected(new THREE.Vector3( 0, 0, 0 ), camera, controls);
+            this.navigateToSelected(new THREE.Vector3( 0, 0, this.sceneZ), camera, controls);
         }
         this.pickPosition = undefined;
     }
@@ -69,12 +70,12 @@ export default class PickHelper {
         // Pause between two consecutive animation frames
         var deltaT = 1;
         function interpolate(acc) {
-              if (acc >= 1) return;
+            if (acc >= 1) return;
 
-              THREE.Quaternion.slerp(startQ, endQ, camera.quaternion, acc);
-              setTimeout(function() {
-                  interpolate(acc + (1 / NUM_ANIM_FRAMES));
-              }, deltaT);
+            THREE.Quaternion.slerp(startQ, endQ, camera.quaternion, acc);
+            setTimeout(function() {
+                interpolate(acc + (1 / NUM_ANIM_FRAMES));
+            }, deltaT);
         }
         interpolate(1 / NUM_ANIM_FRAMES);
 

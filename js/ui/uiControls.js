@@ -43,7 +43,6 @@ export default function(fogHelper, sceneParams, onShowPointsChange, onShowLinesC
        const sceneFolder = gui.addFolder('Scene');
        sceneFolder.add(sceneParams, 'autoRotateSpeed', 0, 5, 0.01);
 
-       //const fog = scene.fog;
        if (fogHelper) {
           const fogNear = fogHelper.fogNear;
           const fogFar = fogHelper.fogFar;

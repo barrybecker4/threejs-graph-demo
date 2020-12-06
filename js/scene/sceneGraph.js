@@ -24,12 +24,13 @@ const LINE_TYPE_TO_CONSTRUCTOR = {
     Arc: ArcedLineGeom,
 }
 
-export default function(sceneParams) {
+export default function(sceneParams, sceneZ) {
 
     const particlesData = new ParticlesData(sceneParams.maxParticleCount, R);
     const linesData = new LinesData(sceneParams.maxParticleCount);
 
     const group = new THREE.Group();
+    group.position.set(0, 0, sceneZ);
     group.add(createBoxHelper(R));
 
     const globe = createGlobe();

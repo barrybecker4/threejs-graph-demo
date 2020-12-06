@@ -6,19 +6,19 @@ import FogGUIHelper from './ui/FogUIHelper.js';
 import SceneParameters from './ui/SceneParameters.js';
 
 
-export default async function(maxParticleCount) {
+export default async function(maxParticleCount, sceneZ) {
 
     const sceneParams = new SceneParameters(maxParticleCount);
 
     const onShowPointsChange = value => group.showPointCloud(value);
     const onShowLinesChange = value => group.showLineMesh(value);
 
-    const context = await navContext('container');
+    const context = await navContext('container', sceneZ);
     const fogHelper = new FogGUIHelper(context.getScene());
 
     const controls = uiControls(fogHelper, sceneParams, onShowPointsChange, onShowLinesChange);
 
-    const group = sceneGraph(sceneParams);
+    const group = sceneGraph(sceneParams, sceneZ);
     context.setSceneRoot(group);
 
     animate();

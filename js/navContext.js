@@ -12,18 +12,18 @@ const ENABLE_VR = true;
 const FAR_CLIP = 4000;
 
 
-export default async function(containerId) {
+export default async function(containerId, sceneZ) {
 
     const container = document.getElementById(containerId);
-    const camera = createCamera();
+    const camera = createCamera(sceneZ);
     const scene = createScene();
     let sceneRoot = null;
     scene.add(camera); // needed if camera has light source
     const renderer = createRenderer(container);
 
-    const pickHelper = new PickHelper(container);
+    const pickHelper = new PickHelper(container, sceneZ);
     pickHelper.setPickLayer(1);
-    const controls = createOrbitControls(camera, container);
+    const controls = createOrbitControls(camera, container, sceneZ);
 
     const stats = addPerformanceStatistics();
 
@@ -99,10 +99,12 @@ function addVRButton(renderer) {
     renderer.xr.enabled = true;
 }
 
-function createOrbitControls(camera, container) {
+function createOrbitControls(camera, container, sceneZ) {
     const controls = new OrbitControls(camera, container);
     controls.minDistance = 500;
     controls.maxDistance = FAR_CLIP - 500;
+    controls.target.set(0, 0, sceneZ);
+
     return controls;
 }
 
