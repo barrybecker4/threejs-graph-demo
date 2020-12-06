@@ -9,7 +9,7 @@ export default class SceneParameters {
 
         this.showPoints = true;
         this.showLines = true;
-        this.minDistance = 150;
+        this.minDistance = 1.5;
         this.limitConnections = false;
         this.maxConnections = 20;
         this.lineOpacity = 0.4;

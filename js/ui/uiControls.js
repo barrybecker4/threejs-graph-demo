@@ -22,7 +22,7 @@ export default function(fogHelper, sceneParams, onShowPointsChange, onShowLinesC
 
    function createConnectionsUI(gui) {
        const connectionsFolder = gui.addFolder('Connections');
-       connectionsFolder.add(sceneParams, 'minDistance', 10, 300);
+       connectionsFolder.add(sceneParams, 'minDistance', 0.1, 3.0);
        connectionsFolder.add(sceneParams, 'limitConnections');
        connectionsFolder.add(sceneParams, 'maxConnections', 0, 30, 1);
        connectionsFolder.add(sceneParams, 'lineOpacity', 0.2, 1.0, 0.1);
